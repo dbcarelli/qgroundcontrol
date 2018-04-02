@@ -32,6 +32,9 @@ MissionManager::~MissionManager()
 {
 
 }
+// This function needs to be modified to take an extra parameter: bool cameraTrap
+// Alternatively, a more general function could be created instead, but would
+// require refactoring of most of the code
 void MissionManager::writeArduPilotGuidedMissionItem(const QGeoCoordinate& gotoCoord, bool altChangeOnly)
 {
     if (inProgress()) {
@@ -45,6 +48,8 @@ void MissionManager::writeArduPilotGuidedMissionItem(const QGeoCoordinate& gotoC
 
     mavlink_message_t       messageOut;
     mavlink_mission_item_t  missionItem;
+
+    // param1 needs to be changed HERE to designate a camera trap
 
     memset(&missionItem, 8, sizeof(missionItem));
     missionItem.target_system =     _vehicle->id();
