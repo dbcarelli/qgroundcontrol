@@ -94,7 +94,7 @@ public:
     /// Add a new simple mission item to the list
     ///     @param i: index to insert at
     /// @return Sequence number for new item
-    Q_INVOKABLE int insertSimpleMissionItem(QGeoCoordinate coordinate, int i);
+    Q_INVOKABLE int insertSimpleMissionItem(QGeoCoordinate coordinate, int i, bool cameraTrap = false);
 
     /// Add a new ROI mission item to the list
     ///     @param i: index to insert at

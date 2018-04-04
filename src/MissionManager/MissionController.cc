@@ -330,7 +330,7 @@ int MissionController::_nextSequenceNumber(void)
 }
 
 // This is where the mission item needs to be set
-int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
+int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i, bool cameraTrap)
 {
     qWarning() << "MissionController::insertSimpleMissionItem called!\n";
 
@@ -357,6 +357,14 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
         }
     }
     newItem->setMissionFlightStatus(_missionFlightStatus);
+
+    qInfo() << "Setting param1...";
+
+    // set parameter 1 to a value > 0 if it's a camera trap
+    if (cameraTrap) newItem->missionItem().setParam1(10);
+
+    qInfo() << "param1 set!";
+
     _visualItems->insert(i, newItem);
 
     _recalcAll();
