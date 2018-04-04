@@ -329,8 +329,11 @@ int MissionController::_nextSequenceNumber(void)
     }
 }
 
+// This is where the mission item needs to be set
 int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
 {
+    qWarning() << "MissionController::insertSimpleMissionItem called!\n";
+
     int sequenceNumber = _nextSequenceNumber();
     SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
     newItem->setSequenceNumber(sequenceNumber);
