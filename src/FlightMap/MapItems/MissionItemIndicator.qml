@@ -33,6 +33,7 @@ MapQuickItem {
             checked:        _isCurrentItem
             label:          missionItem ? missionItem.abbreviation : ""
             index:          missionItem ? missionItem.sequenceNumber : 0
+            cameraTrap:     missionItem.param1 === 10.0
             gimbalYaw:      missionItem.missionGimbalYaw
             vehicleYaw:     missionItem.missionVehicleYaw
             showGimbalYaw:  !isNaN(missionItem.missionGimbalYaw)

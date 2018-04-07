@@ -919,6 +919,9 @@ void SimpleMissionItem::setAltitudeMode(AltitudeMode altitudeMode)
 }
 
 void SimpleMissionItem::setParam1(double param1){
-    _missionItem.setParam1(param1);
+    if (param1 != _missionItem.param1()){
+        _missionItem.setParam1(param1);
+        emit param1Changed();
+    }
 }
 

@@ -46,7 +46,7 @@ public:
     Q_PROPERTY(Fact*            amslAltAboveTerrain     READ amslAltAboveTerrain                                CONSTANT)                           ///< Actual AMSL altitude for item if altitudeMode == AltitudeAboveTerrain
     Q_PROPERTY(int              command                 READ command                WRITE setCommand            NOTIFY commandChanged)
     // ADD NEW PROPERTY CALLED PARAM1
-    Q_PROPERTY(double param1 READ param1 WRITE setParam1 /*NOTIFY param1Changed*/)
+    Q_PROPERTY(double           param1 READ param1 WRITE setParam1 NOTIFY param1Changed)
 
 
     /// Optional sections
