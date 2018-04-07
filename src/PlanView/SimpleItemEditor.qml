@@ -157,6 +157,13 @@ Rectangle {
                 enabled:            flightSpeedCheckbox.checked
                 visible:            missionItem.speedSection.available
             }
+
+        }
+
+        QGCCheckBox {
+            id:         cameraTrapCheckbox
+            text:       qsTr("Camera Trap")
+            onClicked:  checked ? missionItem.param1 = 10 : missionItem.param1 = 0
         }
 
         CameraSection {

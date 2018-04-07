@@ -45,6 +45,9 @@ public:
     Q_PROPERTY(AltitudeMode     altitudeMode            READ altitudeMode           WRITE setAltitudeMode       NOTIFY altitudeModeChanged)
     Q_PROPERTY(Fact*            amslAltAboveTerrain     READ amslAltAboveTerrain                                CONSTANT)                           ///< Actual AMSL altitude for item if altitudeMode == AltitudeAboveTerrain
     Q_PROPERTY(int              command                 READ command                WRITE setCommand            NOTIFY commandChanged)
+    // ADD NEW PROPERTY CALLED PARAM1
+    Q_PROPERTY(double param1 READ param1 WRITE setParam1 /*NOTIFY param1Changed*/)
+
 
     /// Optional sections
     Q_PROPERTY(QObject*         speedSection            READ speedSection                                       NOTIFY speedSectionChanged)
@@ -72,6 +75,8 @@ public:
     AltitudeMode    altitudeMode        (void) const { return _altitudeMode; }
     Fact*           altitude            (void) { return &_altitudeFact; }
     Fact*           amslAltAboveTerrain (void) { return &_amslAltAboveTerrainFact; }
+    // GETTER
+    double          param1(void) const {return _missionItem.param1();}
 
     CameraSection*  cameraSection       (void) { return _cameraSection; }
     SpeedSection*   speedSection        (void) { return _speedSection; }
@@ -91,6 +96,8 @@ public:
     void setAltPercent      (double altPercent);
     void setAzimuth         (double azimuth);
     void setDistance        (double distance);
+    // SETTER
+    void setParam1          (double val);
 
     bool load(QTextStream &loadStream);
     bool load(const QJsonObject& json, int sequenceNumber, QString& errorString);
@@ -141,6 +148,8 @@ signals:
     void cameraSectionChanged       (QObject* cameraSection);
     void speedSectionChanged        (QObject* cameraSection);
     void altitudeModeChanged        (void);
+    // NOTIFY
+    void param1Changed              (void);
 
 private slots:
     void _setDirty                      (void);

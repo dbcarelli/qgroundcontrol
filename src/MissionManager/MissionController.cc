@@ -358,12 +358,12 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i,
     }
     newItem->setMissionFlightStatus(_missionFlightStatus);
 
-    qInfo() << "Setting param1...";
+//    qInfo() << "Setting param1...";
 
-    // set parameter 1 to a value > 0 if it's a camera trap
-    if (cameraTrap) newItem->missionItem().setParam1(10);
+//    // set parameter 1 to a value > 0 if it's a camera trap
+//    if (cameraTrap) newItem->missionItem().setParam1(10);
 
-    qInfo() << "param1 set!";
+//    qInfo() << "param1 set!";
 
     _visualItems->insert(i, newItem);
 

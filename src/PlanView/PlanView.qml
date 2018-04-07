@@ -379,6 +379,7 @@ QGCView {
                 }
             }
 
+            // WAYPOINT DISPLAY
             // Add the mission item visuals to the map
             Repeater {
                 model: _editingLayer == _layerMission ? _missionController.visualItems : undefined

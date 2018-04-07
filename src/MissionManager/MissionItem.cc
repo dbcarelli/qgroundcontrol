@@ -362,6 +362,7 @@ void MissionItem::setIsCurrentItem(bool isCurrentItem)
 
 void MissionItem::setParam1(double param)
 {
+    qDebug("MissionItem::setParam1 called");
     if (param1() != param) {
         _param1Fact.setRawValue(param);
     }
