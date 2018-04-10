@@ -5,21 +5,25 @@
 #define MAX_DATA_LENGTH 255
 
 //#include <windows.h>//from SerialPort.h
-#include <stdio.h>
+#include <stdio.h>      // standard input / output functions
 #include <stdlib.h>
+#include <string.h>     // string function definitions
+#include <unistd.h>     // UNIX standard function definitions
+#include <fcntl.h>      // File control definitions
+#include <errno.h>      // Error number definitions
+#include <termios.h>    // POSIX terminal control definitions
 //most code simply copied from SerialPort.h
 class DataStationLink
 {
-    HANDLE handler;
     bool connected;
-    COMSTAT status;
     unsigned int errors;
+    int Xbee;
 public:
     DataStationLink(char *portName);
-    ~SerialPort();
+    ~DataStationLink();
 
-    int readSerialPort(char *buffer, unsigned int buf_size);
-    bool writeSerialPort(char *buffer, unsigned int buf_size);
+    int readDataStationLink(char *buffer, unsigned int buf_size);
+    bool writeDataStationLink(char *buffer, unsigned int buf_size);
     bool isConnected();
 };
 
