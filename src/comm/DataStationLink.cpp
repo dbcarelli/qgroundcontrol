@@ -30,6 +30,8 @@ DataStationLink::DataStationLink(char *portName)
 
     /* Flush Port, then applies attributes */
     tcflush( Xbee, TCIFLUSH );
+    //should check connection, then set connected to true;
+    this->connected = true;
 }
 DataStationLink::~DataStationLink()
 {
@@ -42,30 +44,31 @@ int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
 {
     int n = 0,
     spot = 0;
-    char buf = '\0';
+//    char buf = '\0';
 
     /* Whole response*/
-    char response[1024];
+    char response[buf_size];
     memset(response, '\0', sizeof response);
 
-    do {
-        n = read( Xbee, &buf, 1 );
-        sprintf( &response[spot], "%c", buf );//if formatting is the issue, go here first
+    do {//should read out postlimiter first
+        n = read( Xbee, &buffer, 1 );//most likely my use of pointeres is messed up here and the next line
+        sprintf( &response[spot], "%c", *buffer );//if formatting is the issue, go here first
         spot += n;
-    } while( buf != '\r' && n > 0);
-
+    } while( *buffer != '\r' && n > 0);
+    return *response;//returns a pointer to the response, which is where the read in data is written to.
 }
 
 bool DataStationLink::writeDataStationLink(char *buffer, unsigned int buf_size)
 {
-    unsigned char cmd[] = "INIT \r";
+    //unsigned char cmd[] = "INIT \r";//prelimeter here
     int n_written = 0,
         spot = 0;
 
     do {
-        n_written = write( Xbee, &cmd[spot], 1 );
+        n_written = write( Xbee, &buffer[spot], 1 );
         spot += n_written;
-    } while (cmd[spot-1] != '\r' && n_written > 0);
+    } while (n_written > 0&& spot>0 && (unsigned int) spot<buf_size);//removed buffer[spot-1] != '\r' &&  in favor of buf_size based limiting
+    return spot>0;
 }
 
 bool DataStationLink::isConnected()
