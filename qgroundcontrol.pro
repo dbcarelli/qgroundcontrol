@@ -392,12 +392,17 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
+    src/comm/datastationlink.h \
+    src/comm/DataStationlink.h \
+    src/comm/DataStationLink.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
+    src/comm/datastationlink.cpp \
+    src/comm/DataStationLink.cpp
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
