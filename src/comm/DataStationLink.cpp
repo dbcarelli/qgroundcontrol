@@ -3,15 +3,8 @@
 DataStationLink::DataStationLink(char *portName)
 {
     this->connected = false;
-    this->Xbee = open( "/dev/ttyXbee0", O_RDWR| O_NOCTTY );//this was taken from a Xbee serial reader, port needs to be changed
+    this->Xbee = open( portName, O_RDWR| O_NOCTTY );
 
-//    if ( this->Xbee < 0 )
-//    {
-//        cout << "Error " << errno << " opening " << "/dev/ttyXbee0" << ": " << strerror (errno) << endl;
-//    } //an error reporter that doesn't work
-
-    struct termios tty;
-    struct termios tty_old;
     memset (&tty, 0, sizeof tty);
 
     /* Save old tty parameters */
@@ -37,22 +30,18 @@ DataStationLink::DataStationLink(char *portName)
 
     /* Flush Port, then applies attributes */
     tcflush( Xbee, TCIFLUSH );
-//    if ( tcsetattr ( Xbee, TCSANOW, &tty ) != 0) {
-//       std::cout << "Error " << errno << " from tcsetattr" << std::endl;
-//    }//another copied error reoporter that doesn't work
-
-
 }
 DataStationLink::~DataStationLink()
 {
     if (this->connected){
         this->connected = false;
+        //from window version, handle was cleared here.
     }
 }
 int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
 {
     int n = 0,
-        spot = 0;
+    spot = 0;
     char buf = '\0';
 
     /* Whole response*/
@@ -61,19 +50,10 @@ int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
 
     do {
         n = read( Xbee, &buf, 1 );
-        sprintf( &response[spot], "%c", buf );
+        sprintf( &response[spot], "%c", buf );//if formatting is the issue, go here first
         spot += n;
     } while( buf != '\r' && n > 0);
 
-//    if (n < 0) {
-//        std::cout << "Error reading: " << strerror(errno) << std::endl;
-//    }
-//    else if (n == 0) {
-//        std::cout << "Read nothing!" << std::endl;
-//    }
-//    else {
-//        std::cout << "Response: " << response << std::endl;
-//    } A bunch of uncompliedable error reporting
 }
 
 bool DataStationLink::writeDataStationLink(char *buffer, unsigned int buf_size)
