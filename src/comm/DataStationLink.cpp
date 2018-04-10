@@ -21,8 +21,8 @@ DataStationLink::DataStationLink(char *portName)
     tty.c_cflag     |=  CS8;
 
     tty.c_cflag     &=  ~CRTSCTS;           // no flow control
-    tty.c_cc[VMIN]   =  1;                  // read doesn't block
-    tty.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
+    tty.c_cc[VMIN]   =  1;                  // read doesn't block- read will return on a single character if no more appear
+    tty.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout- read returns if 0.5 seconds pass without an incoming character
     tty.c_cflag     |=  CREAD | CLOCAL;     // turn on READ & ignore ctrl lines
 
     /* Make raw */
@@ -43,7 +43,7 @@ DataStationLink::~DataStationLink()
 int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
 {
     int n = 0,
-    spot = 0;
+        spot = 0;
 //    char buf = '\0';
 
     /* Whole response*/
@@ -51,10 +51,10 @@ int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
     memset(response, '\0', sizeof response);
 
     do {//should read out postlimiter first
-        n = read( Xbee, &buffer, 1 );//most likely my use of pointeres is messed up here and the next line
+        n = read( Xbee, &buffer, 1 );//most likely my use of pointeres is messed up here and the next line//should read the Xbee into the buffer, one character at a time
         sprintf( &response[spot], "%c", *buffer );//if formatting is the issue, go here first
         spot += n;
-    } while( *buffer != '\r' && n > 0);
+    } while( spot>0 && (unsigned int) spot<buf_size && n > 0);
     return *response;//returns a pointer to the response, which is where the read in data is written to.
 }
 
