@@ -2427,6 +2427,7 @@ void Vehicle::startMission(void)
     _firmwarePlugin->startMission(this);
 }
 
+// Function parameters need to be changed to include param1
 void Vehicle::guidedModeGotoLocation(const QGeoCoordinate& gotoCoord)
 {
     if (!guidedModeSupported()) {
