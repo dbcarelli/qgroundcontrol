@@ -399,7 +399,7 @@ SOURCES += \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
     src/api/QmlComponentInfo.cc \
-    src/comm/DataStationLink.cpp
+    src/comm/DataStationLink.cc
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
