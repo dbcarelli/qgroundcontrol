@@ -392,7 +392,8 @@ HEADERS += \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
     src/api/QmlComponentInfo.h \
-    src/comm/DataStationLink.h
+    src/comm/DataStationLink.h \
+    src/comm/DataStationLink_copy.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \

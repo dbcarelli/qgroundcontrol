@@ -1,8 +1,14 @@
-#include <stdio.h>
+#include <iostream>
 #include "DataStationLink.h"
 
 using namespace std;
 
 int main(){
-	return 0;
+    DataStationLink *dsLink = new DataStationLink("/dev/ttyUSB0");
+
+    dsLink->writeDataStationLink("h", 1);
+
+    cout << "sent\n";
+
+    return 0;
 }
