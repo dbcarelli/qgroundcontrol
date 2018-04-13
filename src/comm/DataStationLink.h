@@ -16,7 +16,7 @@ private:
 
 public:
     DataStationLink(QString portname);
-    ~DataStationLink();
+    ~DataStationLink(){serialPort->close()};
 
     int setDataStationId(QString newId);
     int deployDataStation(QString targetId);
