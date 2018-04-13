@@ -14,7 +14,6 @@ int DataStationLink::_write(QString buffer){
 
 QString DataStationLink::_read(size_t size){
     return QString::fromUtf8(serialPort->read(size));
-
 }
 
 int DataStationLink::setDataStationId(QString newId){
@@ -54,8 +53,21 @@ QString DataStationLink::deployDataStation(QString targetId){
     _write(command);
 
     // receive all the information in the form a QString that will be parsed
-    // later.
-    // TODO: determine the actual number of chars expected in this response.
-    return _read(20):
+    // later. The first char should be a prelimitor.
+    QString retVal = "";
+    char newChar = _read(1);
+
+    if (newChar != prelimitor)
+      return retVal;
+
+    while (true){
+      newChar = _read(1);
+      if (newChar != postlimitor){
+        retVal += newChar;
+      }
+      else{
+        return retVal;
+      }
+    }
 
 }
