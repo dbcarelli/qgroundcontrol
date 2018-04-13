@@ -11,8 +11,8 @@ DataStationLink::DataStationLink(char *portName)
     tty_old = tty;
 
     /* Set Baud Rate */
-    cfsetospeed (&tty, (speed_t)B9600);
-    cfsetispeed (&tty, (speed_t)B9600);
+    cfsetospeed (&tty, (speed_t)B57600);
+    cfsetispeed (&tty, (speed_t)B57600);
 
     /* Setting other Port Stuff */
     tty.c_cflag     &=  ~PARENB;            // Make 8n1
