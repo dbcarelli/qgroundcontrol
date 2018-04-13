@@ -7,6 +7,9 @@ class DataStationLink
 private:
     bool connected;
     QSerialPort * serialPort;
+    QString preamble = "street";
+    QString prelimitor = "<";
+    QString postlimitor = ">";
 
     QString _read(size_t size);
     int _write(QString buffer);
@@ -37,4 +40,3 @@ public:
 //};
 
 #endif // DATASTATIONLINK_H
-
