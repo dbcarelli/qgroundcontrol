@@ -96,6 +96,11 @@ public:
     /// @return Sequence number for new item
     Q_INVOKABLE int insertSimpleMissionItem(QGeoCoordinate coordinate, int i);
 
+    /// Add a new data station mission item to the list
+    ///     @param i: index to insert at
+    /// @return Sequence number for new item
+    Q_INVOKABLE int insertDataStationItem(QGeoCoordinate coordinate, int i);
+
     /// Add a new ROI mission item to the list
     ///     @param i: index to insert at
     /// @return Sequence number for new item
@@ -254,13 +259,14 @@ private:
     bool                    _itemsRequested;
     MissionFlightStatus_t   _missionFlightStatus;
     QString                 _surveyMissionItemName;
-    QString                 _fwLandingMissionItemName;
+    QString                 _dataStationMissionItem;
     QString                 _structureScanMissionItemName;
     QString                 _corridorScanMissionItemName;
     AppSettings*            _appSettings;
     double                  _progressPct;
     int                     _currentPlanViewIndex;
     VisualMissionItem*      _currentPlanViewItem;
+    QString                 _fwLandingMissionItemName;
 
     static const char*  _settingsGroup;
 

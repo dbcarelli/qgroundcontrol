@@ -49,6 +49,7 @@ QGCView {
     property bool   _lightWidgetBorders:        editorMap.isSatelliteMap
     property bool   _addWaypointOnClick:        false
     property bool   _addROIOnClick:             false
+    property bool   _addDataStationOnClick:     false
     property bool   _singleComplexItem:         _missionController.complexMissionItemNames.length === 1
     property real   _toolbarHeight:             _qgcView.height - ScreenTools.availableHeight
     property int    _editingLayer:              _layerMission
@@ -243,7 +244,13 @@ QGCView {
         var sequenceNumber = _missionController.insertSimpleMissionItem(coordinate, index)
         _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
     }
-
+    ///Insert a new data station mission Item
+    ///     @param coordinate Location to insert item
+    ///     @param index Insert item at this index
+    function insertDataStationItem(coordinate, index) {
+        var sequenceNumber = _missionController.insertDataStationItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
+    }
     /// Inserts a new ROI mission item
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
@@ -368,7 +375,10 @@ QGCView {
                         } else if (_addROIOnClick) {
                             _addROIOnClick = false
                             insertROIMissionItem(coordinate, _missionController.visualItems.count)
+                        } else if (_addDataStationOnClick){
+                            insertDataStationItem(coordinate, _missionController.visualItems.count)
                         }
+
                         break
                     case _layerRallyPoints:
                         if (_rallyPointController.supported) {
@@ -434,11 +444,11 @@ QGCView {
                 color:              qgcPal.window
                 title:              qsTr("Plan")
                 z:                  QGroundControl.zOrderWidgets
-                showAlternateIcon:  [ false, false, false, masterController.dirty, false, false, false ]
-                rotateImage:        [ false, false, false, masterController.syncInProgress, false, false, false ]
-                animateImage:       [ false, false, false, masterController.dirty, false, false, false ]
-                buttonEnabled:      [ true, true, true, !masterController.syncInProgress, true, true, true ]
-                buttonVisible:      [ true, _waypointsOnlyMode, true, true, true, _showZoom, _showZoom ]
+                showAlternateIcon:  [ false, false, false, masterController.dirty, false, false, false, false ]
+                rotateImage:        [ false, false, false, masterController.syncInProgress, false, false, false, false ]
+                animateImage:       [ false, false, false, masterController.dirty, false, false, false, false ]
+                buttonEnabled:      [ true, true, true, !masterController.syncInProgress, true, true, true, true ]
+                buttonVisible:      [ true, _waypointsOnlyMode, true, true, true, _showZoom, _showZoom, true ]
                 maxHeight:          mapScale.y - toolStrip.y
 
                 property bool _showZoom: !ScreenTools.isMobile
@@ -477,18 +487,24 @@ QGCView {
                     {
                         name:               "Out",
                         iconSource:         "/qmlimages/ZoomMinus.svg"
+                    },                    {
+                        name:       "DataStation",
+                        iconSource: "/qmlimages/MapAddMission.svg",///we need a new icon
+                        toggle:     true
                     }
                 ]
-
+    //need to add an additional case here
                 onClicked: {
                     switch (index) {
                     case 0:
                         _addWaypointOnClick = checked
                         _addROIOnClick = false
+                        _addDataStationOnClick = false
                         break
                     case 1:
                         _addROIOnClick = checked
                         _addWaypointOnClick = false
+                        _addDataStationOnClick = false
                         break
                     case 2:
                         if (_singleComplexItem) {
@@ -500,6 +516,11 @@ QGCView {
                         break
                     case 6:
                         editorMap.zoomLevel -= 0.5
+                        break
+                    case 7:
+                        _addWaypointOnClick = false
+                        _addROIOnClick = false
+                        _addDataStationOnClick = checked
                         break
                     }
                 }
