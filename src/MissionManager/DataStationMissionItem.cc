@@ -54,7 +54,7 @@ DataStationMissionItem::DataStationMissionItem(Vehicle* vehicle, QObject* parent
     , _glideSlopeFact           (_metaDataMap[glideSlopeName])
     , _loiterClockwise          (true)
     , _altitudesAreRelative     (true)
-//    , _valueSetIsDistance       (true)
+    , _valueSetIsDistance       (true)
 {
     _editorQml = "qrc:/qml/FWLandingPatternEditor.qml";
 
