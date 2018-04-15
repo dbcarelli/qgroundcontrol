@@ -18,7 +18,6 @@
 #include "SimpleMissionItem.h"
 #include "SurveyMissionItem.h"
 #include "FixedWingLandingComplexItem.h"
-#include "DataStationMissionItem.h"
 #include "StructureScanComplexItem.h"
 #include "CorridorScanComplexItem.h"
 #include "JsonHelper.h"
@@ -69,7 +68,6 @@ MissionController::MissionController(PlanMasterController* masterController, QOb
     , _progressPct(0)
     , _currentPlanViewIndex(-1)
     , _currentPlanViewItem(NULL)
-    , _dataStationMissionItem(tr("Data Sation"))
 {
     _resetMissionFlightStatus();
     managerVehicleChanged(_managerVehicle);
@@ -370,18 +368,27 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
 int MissionController::insertDataStationItem(QGeoCoordinate coordinate, int i)
 {
     qWarning() << "MissionController::insertDataStationItem called!\n";
-//    ComplexMissionItem* newItem;
-//    int sequenceNumber = _nextSequenceNumber();
-//    newItem = new DataStationMissionItem(_controllerVehicle, _visualItems);
-//    newItem->setCoordinate(coordinate);
-//    newItem->setSequenceNumber(sequenceNumber);
-//    _initVisualItem(newItem);
-//    _visualItems->insert(i, newItem);
 
-//    _recalcAll();
+    int sequenceNumber = _nextSequenceNumber();
+    SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setCommand(MAV_CMD_USER_1);
+    _initVisualItem(newItem);
+    newItem->setDefaultsForCommand();
+    newItem->setCoordinate(coordinate);
 
-//    return newItem->sequenceNumber();
-    return insertComplexMissionItem(_dataStationMissionItem,coordinate,i);
+    double  prevAltitude;
+    int     prevAltitudeMode;
+
+    if (_findPreviousAltitude(i, &prevAltitude, &prevAltitudeMode)) {
+        newItem->altitude()->setRawValue(prevAltitude);
+        newItem->setAltitudeMode((SimpleMissionItem::AltitudeMode)prevAltitudeMode);
+    }
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
 }
 
 int MissionController::insertROIMissionItem(QGeoCoordinate coordinate, int i)
@@ -427,8 +434,6 @@ int MissionController::insertComplexMissionItem(QString itemName, QGeoCoordinate
     } else if (itemName == _corridorScanMissionItemName) {
         newItem = new CorridorScanComplexItem(_controllerVehicle, _visualItems);
         surveyStyleItem = true;
-    } else if (itemName == _dataStationMissionItem) {
-        newItem = new FixedWingLandingComplexItem(_controllerVehicle, _visualItems);
     } else {
         qWarning() << "Internal error: Unknown complex item:" << itemName;
         return sequenceNumber;

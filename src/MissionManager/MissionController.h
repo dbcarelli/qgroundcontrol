@@ -259,7 +259,6 @@ private:
     bool                    _itemsRequested;
     MissionFlightStatus_t   _missionFlightStatus;
     QString                 _surveyMissionItemName;
-    QString                 _dataStationMissionItem;
     QString                 _structureScanMissionItemName;
     QString                 _corridorScanMissionItemName;
     AppSettings*            _appSettings;

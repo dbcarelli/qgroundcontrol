@@ -248,8 +248,10 @@ QGCView {
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
     function insertDataStationItem(coordinate, index) {
-        var sequenceNumber = _missionController.insertDataStationItem(coordinate, index)
-        _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
+        var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
+        var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
     }
     /// Inserts a new ROI mission item
     ///     @param coordinate Location to insert item
