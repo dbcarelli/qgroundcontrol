@@ -14,6 +14,7 @@ DataStationManager::~DataStationManager(){
 
 void DataStationManager::connect(QString portname){
     _dsLink = new DataStationLink(portname);
+    qInfo() << initializeDS();
 }
 
 QString DataStationManager::initializeDS(){
@@ -35,7 +36,7 @@ QString DataStationManager::initializeDS(){
 }
 
 void DataStationManager::deployDS(QString targetId){
-    int coords = _dsLink->deployDataStation(targetId);
+    QString coords = _dsLink->deployDataStation(targetId);
 
     int index = -1;
     for (int i = 0; i < dataStations.size(); i++){
@@ -48,12 +49,12 @@ void DataStationManager::deployDS(QString targetId){
     if (index == -1){
         DataStation *newStation = new DataStation();
         newStation->setId(targetId);
-        // newStation->setGPSCoords(x, y);
+//        newStation->setGPSCoords(x, y);
         dataStations.append(newStation);
         return;
     }
 
-    // dataStations[index].setGPSCoords(x, y);
+//    dataStations[index].setGPSCoords(x, y);
 
 }
 

@@ -16,11 +16,10 @@ private:
 
 public:
     DataStationLink(QString portname);
-    ~DataStationLink(){serialPort->close()};
+    ~DataStationLink(){serialPort->close();}
 
     int setDataStationId(QString newId);
-    int deployDataStation(QString targetId);
+    QString deployDataStation(QString targetId);
 
 };
 
-#endif // DATASTATIONLINK_H

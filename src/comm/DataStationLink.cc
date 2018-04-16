@@ -1,5 +1,5 @@
 #include "DataStationLink.h"
-
+#include <QDebug>
 
 DataStationLink::DataStationLink(QString portname){
     serialPort = new QSerialPort(portname);
@@ -59,8 +59,7 @@ QString DataStationLink::deployDataStation(QString targetId){
     // receive all the information in the form a QString that will be parsed
     // later. The first char should be a prelimitor.
     QString retVal = "";
-    char newChar = _read(1);
-
+    QString newChar = _read(1);
     if (newChar != prelimitor)
       return retVal;
 
