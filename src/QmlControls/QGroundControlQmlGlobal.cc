@@ -41,7 +41,6 @@ QGroundControlQmlGlobal::QGroundControlQmlGlobal(QGCApplication* app, QGCToolbox
     , _firmwarePluginManager(NULL)
     , _settingsManager(NULL)
     , _skipSetupPage(false)
-    , _dataStationManager(NULL)
 {
     // We clear the parent on this object since we run into shutdown problems caused by hybrid qml app. Instead we let it leak on shutdown.
     setParent(NULL);
@@ -77,7 +76,6 @@ void QGroundControlQmlGlobal::setToolbox(QGCToolbox* toolbox)
     _corePlugin             = toolbox->corePlugin();
     _firmwarePluginManager  = toolbox->firmwarePluginManager();
     _settingsManager        = toolbox->settingsManager();
-    _dataStationManager     = toolbox->dataStationManager();
 
 #ifndef __mobile__
    GPSManager *gpsManager = toolbox->gpsManager();

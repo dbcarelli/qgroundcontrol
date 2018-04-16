@@ -32,7 +32,6 @@ class VideoManager;
 class MAVLinkLogManager;
 class QGCCorePlugin;
 class SettingsManager;
-class DataStationManager;
 
 /// This is used to manage all of our top level services/tools
 class QGCToolbox : public QObject {
@@ -57,7 +56,6 @@ public:
     MAVLinkLogManager*          mavlinkLogManager(void)         { return _mavlinkLogManager; }
     QGCCorePlugin*              corePlugin(void)                { return _corePlugin; }
     SettingsManager*            settingsManager(void)           { return _settingsManager; }
-    DataStationManager*         dataStationManager(void)        { return _dataStationManager; }
 
 #ifndef __mobile__
     GPSManager*                 gpsManager(void)                { return _gpsManager; }
@@ -88,7 +86,6 @@ private:
     MAVLinkLogManager*          _mavlinkLogManager;
     QGCCorePlugin*              _corePlugin;
     SettingsManager*            _settingsManager;
-    DataStationManager*         _dataStationManager;
 
     friend class QGCApplication;
 };
@@ -96,7 +93,6 @@ private:
 /// This is the base class for all tools
 class QGCTool : public QObject {
     Q_OBJECT
-
 
 public:
     // All tools must be parented to the QGCToolbox and go through a two phase creation. In the constructor the toolbox

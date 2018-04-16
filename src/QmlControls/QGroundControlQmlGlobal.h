@@ -26,7 +26,6 @@
 #include "GPS/GPSManager.h"
 #endif /* __mobile__ */
 #include "GPSRTKFactGroup.h"
-#include "DataStationManager.h"
 
 #ifdef QT_DEBUG
 #include "MockLink.h"
@@ -54,7 +53,6 @@ public:
     Q_PROPERTY(QGCCorePlugin*       corePlugin          READ corePlugin             CONSTANT)
     Q_PROPERTY(SettingsManager*     settingsManager     READ settingsManager        CONSTANT)
     Q_PROPERTY(FactGroup*           gpsRtk              READ gpsRtkFactGroup        CONSTANT)
-    Q_PROPERTY(DataStationManager* dataStationManager   READ dataStationManager     CONSTANT)
 
     Q_PROPERTY(int      supportedFirmwareCount          READ supportedFirmwareCount CONSTANT)
 
@@ -144,7 +142,6 @@ public:
     QGCCorePlugin*          corePlugin          ()  { return _corePlugin; }
     SettingsManager*        settingsManager     ()  { return _settingsManager; }
     FactGroup*              gpsRtkFactGroup     ()  { return &_gpsRtkFactGroup; }
-    DataStationManager*     dataStationManager  ()  { return _dataStationManager; }
     static QGeoCoordinate   flightMapPosition   ()  { return _coord; }
     static double           flightMapZoom       ()  { return _zoom; }
 
@@ -205,7 +202,6 @@ private:
     FirmwarePluginManager*  _firmwarePluginManager;
     SettingsManager*        _settingsManager;
     GPSRTKFactGroup         _gpsRtkFactGroup;
-    DataStationManager *    _dataStationManager;
 
     bool                    _skipSetupPage;
 

@@ -391,28 +391,13 @@ HEADERS += \
     src/api/QGCCorePlugin.h \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
-<<<<<<< HEAD
     src/api/QmlComponentInfo.h
-=======
-    src/api/QmlComponentInfo.h \
-    src/comm/DataStationLink.h \
-    src/comm/DataStationLink_copy.h \
-    src/MissionManager/DataStation.h \
-    src/MissionManager/DataStationManager.h
->>>>>>> 3eee0397a2667c848b8ce6d40f26af4ad6c6f74f
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
-<<<<<<< HEAD
     src/api/QmlComponentInfo.cc
-=======
-    src/api/QmlComponentInfo.cc \
-    src/comm/DataStationLink.cc \
-    src/MissionManager/DataStation.cc \
-    src/MissionManager/DataStationManager.cc
->>>>>>> 3eee0397a2667c848b8ce6d40f26af4ad6c6f74f
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
