@@ -372,7 +372,7 @@ int MissionController::insertDataStationItem(QGeoCoordinate coordinate, int i)
     int sequenceNumber = _nextSequenceNumber();
     SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
     newItem->setSequenceNumber(sequenceNumber);
-    newItem->setCommand(MAV_CMD_USER_1);
+    newItem->setCommand(MAV_CMD_DO_SET_ROI);
     _initVisualItem(newItem);
     newItem->setDefaultsForCommand();
     newItem->setCoordinate(coordinate);
