@@ -35,6 +35,7 @@ Rectangle {
             text:           missionItem.rawEdit ?
                                 qsTr("Provides advanced access to all commands/parameters. Be very careful!") :
                                 missionItem.commandDescription
+
         }
 
         GridLayout {
@@ -158,12 +159,6 @@ Rectangle {
                 visible:            missionItem.speedSection.available
             }
 
-        }
-
-        QGCCheckBox {
-            id:         cameraTrapCheckbox
-            text:       qsTr("Camera Trap")
-            onClicked:  checked ? missionItem.param1 = 10 : missionItem.param1 = 0
         }
 
         CameraSection {
