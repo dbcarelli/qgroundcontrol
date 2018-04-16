@@ -9,7 +9,7 @@
 
 class DataStationManager : public QGCTool
 {
-
+Q_OBJECT
 private:
 
     DataStationLink * _dsLink;
@@ -22,7 +22,7 @@ public:
     ~DataStationManager();
 
     // Initialize _dsLink
-    void connect(QString portname);
+    Q_INVOKABLE void connect(QString portname);
 
     // initialize datastation, give it a new ID, returns ID
     QString initializeDS();

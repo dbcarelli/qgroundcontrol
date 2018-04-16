@@ -137,9 +137,9 @@ Rectangle {
         }
         QGCButton {
             text:       qsTr("Connect (Data Station)")
-            enabled:    _currentSelection/* && _currentSelection.link*/
+            enabled:    _currentSelection && (_currentSelection.linkType === LinkConfiguration.TypeSerial)
             onClicked: {
-//                QGroundControl.dataStation.connect(_currentSelection)
+                QGroundControl.dataStationManager.connect(_currentSelection.portName)
             }
         }
     }
