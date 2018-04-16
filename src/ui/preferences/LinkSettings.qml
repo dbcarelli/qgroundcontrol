@@ -135,6 +135,13 @@ Rectangle {
                 QGroundControl.linkManager.disconnectLink(_currentSelection.link, false)
             }
         }
+        QGCButton {
+            text:       qsTr("Connect (Data Station)")
+            enabled:    _currentSelection && (_currentSelection.linkType === LinkConfiguration.TypeSerial)
+            onClicked: {
+                QGroundControl.dataStationManager.connect(_currentSelection.portName)
+            }
+        }
     }
 
     Loader {

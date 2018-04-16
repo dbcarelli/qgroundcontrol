@@ -53,6 +53,7 @@ public:
     Q_PROPERTY(QGCCorePlugin*       corePlugin          READ corePlugin             CONSTANT)
     Q_PROPERTY(SettingsManager*     settingsManager     READ settingsManager        CONSTANT)
     Q_PROPERTY(FactGroup*           gpsRtk              READ gpsRtkFactGroup        CONSTANT)
+    Q_PROPERTY(DataStationManager*  dataStationManager   READ dataStationManager    CONSTANT)
 
     Q_PROPERTY(int      supportedFirmwareCount          READ supportedFirmwareCount CONSTANT)
 
