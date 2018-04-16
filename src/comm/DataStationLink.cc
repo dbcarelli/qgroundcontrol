@@ -29,3 +29,4 @@ int DataStationLink::deployDataStation(QString targetId){
     return 0;
 }
 
+DataStationLink::~DataStationLink(){}

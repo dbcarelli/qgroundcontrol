@@ -20,20 +20,5 @@ public:
 
 };
 
-//class DataStationLink
-//{
-//    bool connected;
-//    unsigned int errors;
-//    int Xbee;
-//    struct termios tty;
-//    struct termios tty_old;
-//public:
-//    DataStationLink(char *portName);
-//    ~DataStationLink();
 
-//    int readDataStationLink(char *buffer, size_t buf_size);
-//    int writeDataStationLink(char *buffer, size_t buf_size);
-//    bool isConnected();
-//};
 
-#endif // DATASTATIONLINK_H
