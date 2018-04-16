@@ -369,6 +369,8 @@ QString SimpleMissionItem::commandDescription(void) const
     const MissionCommandUIInfo* uiInfo = _commandTree->getUIInfo(_vehicle, (MAV_CMD)command());
     if (uiInfo) {
         return uiInfo->description();
+    } else if ((MAV_CMD)command() == MAV_CMD_USER_1){
+        return tr("Data Station");
     } else {
         qWarning() << "Should not ask for command description on unknown command";
         return commandName();
@@ -380,6 +382,8 @@ QString SimpleMissionItem::commandName(void) const
     const MissionCommandUIInfo* uiInfo = _commandTree->getUIInfo(_vehicle, (MAV_CMD)command());
     if (uiInfo) {
         return uiInfo->friendlyName();
+    } else if ((MAV_CMD)command() == MAV_CMD_USER_1){
+        return tr("Data Station");
     } else {
         qWarning() << "Request for command name on unknown command";
         return tr("Unknown: %1").arg(command());
@@ -402,6 +406,8 @@ QString SimpleMissionItem::abbreviation() const
         return tr("VTOL Land");
     case MAV_CMD_DO_SET_ROI:
         return tr("ROI");
+    case MAV_CMD_USER_1:
+        return tr("Data Station");
     default:
         return QString();
     }
