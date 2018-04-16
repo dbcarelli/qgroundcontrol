@@ -48,6 +48,10 @@ Rectangle {
         id: conController
     }
 
+    DataStationControler {
+        id: dataController
+    }
+
     QGCFlickable {
         id:                 buttonScroll
         width:              buttonColumn.width
@@ -112,6 +116,11 @@ Rectangle {
                         buttonImage:        "/qmlimages/MavlinkConsoleIcon"
                         buttonText:         qsTr("Mavlink Console")
                         pageSource:         "MavlinkConsolePage.qml"
+                    }
+                    ListElement {
+                        buttonImage:        "/qmlimages/LogDownloadIcon"
+                        buttonText:         qsTr("Data Station Control")
+                        pageSource:         "DataStationPage.qml"
                     }
                 }
 
