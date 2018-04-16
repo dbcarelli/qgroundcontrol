@@ -1,13 +1,32 @@
-//This file will stand control Xbee communication with camera traps like linkManager controls MavLinks with the vehicle. 
-//Skeleton of File:
+#include "DataStationLink.h"
 
-//Parse in
-//Parse Out
-//Reset DataStation
-//Data Station ID Status Request
-//Save Data Station to List (spreadsheet)
-//Recover Data Station from list by ID
 
-//Data Station List will be stored in parallel with mission logs, /Home/Documents/QGroundControl/DataStations
+DataStationLink::DataStationLink(QString portname){
+    serialPort = new QSerialPort(portname);
 
-//Additionally, the gui will need modificaiton to acess these features.
+    serialPort->open(QIODevice::ReadWrite);
+    serialPort->setBaudRate(QSerialPort::Baud57600);
+}
+
+int DataStationLink::_write(QString buffer){
+    return serialPort->write(buffer.toUtf8());
+}
+
+QString DataStationLink::_read(size_t size){
+    return QString::fromUtf8(serialPort->read(size));
+
+}
+
+int DataStationLink::setDataStationId(QString newId){
+    QString message = "changin data station id...";
+    _write(message);
+    return 0;
+}
+
+int DataStationLink::deployDataStation(QString targetId){
+    QString message = "data station deployed";
+    _write(message);
+    return 0;
+}
+
+DataStationLink::~DataStationLink(){}
