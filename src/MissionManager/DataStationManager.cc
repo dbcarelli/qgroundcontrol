@@ -3,7 +3,10 @@
 
 DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
-{}
+{
+    qmlRegisterUncreatableType<DataStationManager> ("QGroundControl", 1, 0, "DataStationManager", "Reference only");
+//    qRegisterMetaType<DataStationManager*>("DataStationManager*");
+}
 
 DataStationManager::~DataStationManager(){
     delete _dsLink;
