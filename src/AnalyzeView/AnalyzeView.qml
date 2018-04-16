@@ -48,10 +48,6 @@ Rectangle {
         id: conController
     }
 
-    DataStationControler {
-        id: dataController
-    }
-
     QGCFlickable {
         id:                 buttonScroll
         width:              buttonColumn.width
