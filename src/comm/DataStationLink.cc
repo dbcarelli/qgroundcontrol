@@ -6,6 +6,10 @@ DataStationLink::DataStationLink(QString portname){
 
     serialPort->open(QIODevice::ReadWrite);
     serialPort->setBaudRate(QSerialPort::Baud57600);
+
+    qInfo("SUUUHHH");
+    QString buffer = "sth pretty";
+    serialPort->write(buffer.toUtf8());
 }
 
 int DataStationLink::_write(QString buffer){
