@@ -1,12 +1,10 @@
 #include "DataStationLink.h"
 
-DataStationLink::DataStationLink(char *portName)
-{
-    this->connected = false;
-    this->Xbee = open( portName, O_RDWR| O_NOCTTY );
 
-    memset (&tty, 0, sizeof tty);
+DataStationLink::DataStationLink(QString portname){
+    serialPort = new QSerialPort(portname);
 
+<<<<<<< HEAD
     /* Save old tty parameters */
     tty_old = tty;
 
@@ -32,46 +30,31 @@ DataStationLink::DataStationLink(char *portName)
     tcflush( Xbee, TCIFLUSH );
     //should check connection, then set connected to true;
     this->connected = true;
-}
-DataStationLink::~DataStationLink()
-{
-    if (this->connected){
-        this->connected = false;
-        //from window version, handle was cleared here.
-    }
-}
-int DataStationLink::readDataStationLink(char *buffer, unsigned int buf_size)
-{
-    int n = 0,
-        spot = 0;
-//    char buf = '\0';
-
-    /* Whole response*/
-    char response[buf_size];
-    memset(response, '\0', sizeof response);
-
-    do {//should read out postlimiter first
-        n = read( Xbee, &buffer, 1 );//most likely my use of pointeres is messed up here and the next line//should read the Xbee into the buffer, one character at a time
-        sprintf( &response[spot], "%c", *buffer );//if formatting is the issue, go here first
-        spot += n;
-    } while( spot>0 && (unsigned int) spot<buf_size && n > 0);
-    return *response;//returns a pointer to the response, which is where the read in data is written to.
+=======
+    serialPort->open(QIODevice::ReadWrite);
+    serialPort->setBaudRate(QSerialPort::Baud57600);
+>>>>>>> 3eee0397a2667c848b8ce6d40f26af4ad6c6f74f
 }
 
-bool DataStationLink::writeDataStationLink(char *buffer, unsigned int buf_size)
-{
-    //unsigned char cmd[] = "INIT \r";//prelimeter here
-    int n_written = 0,
-        spot = 0;
-
-    do {
-        n_written = write( Xbee, &buffer[spot], 1 );
-        spot += n_written;
-    } while (n_written > 0&& spot>0 && (unsigned int) spot<buf_size);//removed buffer[spot-1] != '\r' &&  in favor of buf_size based limiting
-    return spot>0;
+int DataStationLink::_write(QString buffer){
+    return serialPort->write(buffer.toUtf8());
 }
 
-bool DataStationLink::isConnected()
-{
-    return this->connected;
+QString DataStationLink::_read(size_t size){
+    return QString::fromUtf8(serialPort->read(size));
+
 }
+
+int DataStationLink::setDataStationId(QString newId){
+    QString message = "changin data station id...";
+    _write(message);
+    return 0;
+}
+
+int DataStationLink::deployDataStation(QString targetId){
+    QString message = "data station deployed";
+    _write(message);
+    return 0;
+}
+
+DataStationLink::~DataStationLink(){}

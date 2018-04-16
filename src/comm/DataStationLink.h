@@ -1,27 +1,24 @@
-#ifndef DATASTATIONLINK_H
-#define DATASTATIONLINK_H
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QIODevice>
 
-#include <stdio.h>      // standard input / output functions
-#include <stdlib.h>
-#include <string.h>     // string function definitions
-#include <unistd.h>     // UNIX standard function definitions
-#include <fcntl.h>      // File control definitions
-#include <errno.h>      // Error number definitions
-#include <termios.h>    // POSIX terminal control definitions
 class DataStationLink
 {
+private:
     bool connected;
-    unsigned int errors;
-    int Xbee;
-    struct termios tty;
-    struct termios tty_old;
+    QSerialPort * serialPort;
+
+    QString _read(size_t size);
+    int _write(QString buffer);
+
 public:
-    DataStationLink(char *portName);
+    DataStationLink(QString portname);
     ~DataStationLink();
 
-    int readDataStationLink(char *buffer, unsigned int buf_size);
-    bool writeDataStationLink(char *buffer, unsigned int buf_size);
-    bool isConnected();
+    int setDataStationId(QString newId);
+    int deployDataStation(QString targetId);
+
 };
 
-#endif // DATASTATIONLINK_H
+
+

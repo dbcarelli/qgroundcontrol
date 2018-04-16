@@ -4,6 +4,7 @@
 using namespace std;
 
 int main(){
+<<<<<<< HEAD
 	char portName[256] = "/dev/ttyUSB0";
 
 	cout << portName;
@@ -22,4 +23,13 @@ int main(){
 	std::cout << inputBuffer << endl;
 
 	return 0;
+=======
+    DataStationLink *dsLink = new DataStationLink("/dev/ttyUSB0");
+
+    dsLink->writeDataStationLink("h", 1);
+
+    cout << "sent\n";
+
+    return 0;
+>>>>>>> 3eee0397a2667c848b8ce6d40f26af4ad6c6f74f
 }
