@@ -26,6 +26,7 @@
 #include "GPS/GPSManager.h"
 #endif /* __mobile__ */
 #include "GPSRTKFactGroup.h"
+#include "DataStationManager.h"
 
 #ifdef QT_DEBUG
 #include "MockLink.h"
