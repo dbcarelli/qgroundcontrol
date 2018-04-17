@@ -391,13 +391,19 @@ HEADERS += \
     src/api/QGCCorePlugin.h \
     src/api/QGCOptions.h \
     src/api/QGCSettings.h \
-    src/api/QmlComponentInfo.h
+    src/api/QmlComponentInfo.h \
+    src/comm/DataStationLink.h \
+    src/MissionManager/DataStation.h \
+    src/MissionManager/DataStationManager.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
     src/api/QGCOptions.cc \
     src/api/QGCSettings.cc \
-    src/api/QmlComponentInfo.cc
+    src/api/QmlComponentInfo.cc \
+    src/comm/DataStationLink.cc \
+    src/MissionManager/DataStation.cc \
+    src/MissionManager/DataStationManager.cc
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)
@@ -604,7 +610,7 @@ HEADERS += \
 
 AndroidBuild {
 HEADERS += \
-	src/Joystick/JoystickAndroid.h \
+        src/Joystick/JoystickAndroid.h \
 }
 
 DebugBuild {
@@ -688,7 +694,7 @@ iOSBuild {
 
 AndroidBuild {
     SOURCES += src/MobileScreenMgr.cc \
-	src/Joystick/JoystickAndroid.cc \
+        src/Joystick/JoystickAndroid.cc \
 }
 
 SOURCES += \

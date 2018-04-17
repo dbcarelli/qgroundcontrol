@@ -144,6 +144,7 @@ public:
     QGCCorePlugin*          corePlugin          ()  { return _corePlugin; }
     SettingsManager*        settingsManager     ()  { return _settingsManager; }
     FactGroup*              gpsRtkFactGroup     ()  { return &_gpsRtkFactGroup; }
+    DataStationManager*     dataStationManager  ()  { return _dataStationManager; }
     static QGeoCoordinate   flightMapPosition   ()  { return _coord; }
     static double           flightMapZoom       ()  { return _zoom; }
 
@@ -204,6 +205,7 @@ private:
     FirmwarePluginManager*  _firmwarePluginManager;
     SettingsManager*        _settingsManager;
     GPSRTKFactGroup         _gpsRtkFactGroup;
+    DataStationManager *    _dataStationManager;
 
     bool                    _skipSetupPage;
 
