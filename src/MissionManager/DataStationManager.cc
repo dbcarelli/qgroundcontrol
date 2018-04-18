@@ -1,5 +1,4 @@
-
-#include "DataStationManager.h"
+#include<DataStationManager.h>
 
 DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
