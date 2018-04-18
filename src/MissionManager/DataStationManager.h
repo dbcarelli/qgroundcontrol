@@ -24,7 +24,8 @@ private:
     QList<DataStation *> dataStations;
 
 public:
-
+    Q_PROPERTY(QList<DataStation *> dataStations READ getDataStations NOTIFY dataStationsChanged)//add a write when we know what writing will look like
+    QList<DataStation *> getDataStations                  () { return dataStations; }
     DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
     // close _dsLink
     ~DataStationManager();
@@ -56,8 +57,6 @@ public:
     Q_INVOKABLE void setActive(int index, bool status){ dataStations.at(index)->setActive(status); }
     Q_INVOKABLE int getNumOfDataStations(){ return dataStations.size(); }
 
-signals:
-    void dataStationsChanged();
 };
 
 
