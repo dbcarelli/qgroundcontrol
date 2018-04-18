@@ -38,12 +38,10 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
-                //console.warn : "QGroundControl.dataStationManager"
                 onDataStationsChanged: {
                     tableView.selection.clear()
-
                     for(var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
-                        var o = QGroundControl.dataStationManager.getDataStations[i]
+                        var o = QGroundControl.dataStationManager.getDataStations()[i]
                         if (o && o.selected) {
                             tableView.selection.select(i, i)
                         }
@@ -55,7 +53,7 @@ AnalyzePage {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.DataStationManager
+                model:              QGroundControl.dataStationManager
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
                 onActivated: QGroundControl.dataStationManager.setDataStationSelected(tableView.currentRow)
@@ -66,8 +64,8 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
-                            return o ? o.getId() : ""
+                            var o = QGroundControl.dataStationManager.get(styleData.row)
+                            return o ? o.id : ""
                         }
                     }
                 }
