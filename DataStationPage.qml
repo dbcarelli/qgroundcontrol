@@ -19,10 +19,10 @@ import QGroundControl.Controllers   1.0
 import QGroundControl.ScreenTools   1.0
 
 AnalyzePage {
-    id:                 DataStationPage
+    id:                 dataStationPage
     pageComponent:      pageComponent
-    pageName:           qsTr("Log Download")
-    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")
+    pageName:           qsTr("Data Station Manager")
+    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")//change code
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -37,11 +37,11 @@ AnalyzePage {
             height: availableHeight
 
             Connections {
-                target: dataController
-                onSelectionChanged: {
+                target: QGroundControl.dataStationManager
+                onDataStationsChanged: {
                     tableView.selection.clear()
-                    for(var i = 0; i < dataController.model.count; i++) {
-                        var o = dataController.model.get(i)
+                    for(var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
+                        var o = QGroundControl.dataStationManager.getDataStations()[i]
                         if (o && o.selected) {
                             tableView.selection.select(i, i)
                         }
@@ -53,7 +53,7 @@ AnalyzePage {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              dataController.model
+                model:              QGroundControl.dataStationManager
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
 
@@ -64,7 +64,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = dataController.model.get(styleData.row)
+                            var o = QGroundControl.dataStationManager.get(styleData.row)
                             return o ? o.id : ""
                         }
                     }
@@ -76,11 +76,11 @@ AnalyzePage {
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
-                            var o = dataController.model.get(styleData.row)
+                            var o = QGroundControl.dataStationManager.get(styleData.row)
                             if (o) {
                                 //-- Have we received this entry already?
-                                if(dataController.model.get(styleData.row).received) {
-                                    var d = dataController.model.get(styleData.row).time
+                                if(QGroundControl.dataStationManager.get(styleData.row).received) {
+                                    var d = QGroundControl.dataStationManager.get(styleData.row).time
                                     if(d.getUTCFullYear() < 2010)
                                         return qsTr("Date Unknown")
                                     else
@@ -99,7 +99,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignRight
                         text: {
-                            var o = dataController.model.get(styleData.row)
+                            var o = QGroundControl.dataStationManager.get(styleData.row)
                             return o ? o.sizeStr : ""
                         }
                     }
@@ -112,7 +112,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = dataController.model.get(styleData.row)
+                            var o = QGroundControl.dataStationManager.get(styleData.row)
                             return o ? o.status : ""
                         }
                     }
@@ -143,13 +143,13 @@ AnalyzePage {
                     width:      _butttonWidth
                     onClicked: {
                         //-- Clear selection
-                        for(var i = 0; i < dataController.model.count; i++) {
-                            var o = dataController.model.get(i)
+                        for(var i = 0; i < QGroundControl.dataStationManager.count; i++) {
+                            var o = QGroundControl.dataStationManager.get(i)
                             if (o) o.selected = false
                         }
                         //-- Flag selected log files
                         tableView.selection.forEach(function(rowIndex){
-                            var o = dataController.model.get(rowIndex)
+                            var o = QGroundControl.dataStationManager.get(rowIndex)
                             if (o) o.selected = true
                         })
                         fileDialog.qgcView =        logDownloadPage
@@ -171,7 +171,7 @@ AnalyzePage {
                 }
 
                 QGCButton {
-                    enabled:    !dataController.requestingList && !dataController.downloadingLogs && dataController.model.count > 0
+                    enabled:    !dataController.requestingList && !dataController.downloadingLogs && QGroundControl.dataStationManager.count > 0
                     text:       qsTr("Erase All")
                     width:      _butttonWidth
                     onClicked:  logDownloadPage.showDialog(eraseAllMessage,
