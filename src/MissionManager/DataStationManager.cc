@@ -54,7 +54,12 @@ void DataStationManager::deployDS(QString targetId){
     }
 
 //    dataStations[index].setGPSCoords(x, y);
-
+}
+void DataStationManager::setDataStationSelected(int i){
+    dataStations[i]->setSelected();
+}
+DataStation DataStationManager::getDataStation(int i){
+    return *dataStations[i];
 }
 
 
