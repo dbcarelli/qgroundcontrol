@@ -8,6 +8,7 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     qmlRegisterType<DataStation>("QGroundControl", 1, 0, "DataStation");
 
     loadFromFile();
+    saveToFile();
 }
 
 DataStationManager::~DataStationManager(){
@@ -71,11 +72,7 @@ void DataStationManager::loadFromFile(){
     }
 
     saveFile->open(QIODevice::ReadOnly);
-    QJsonDocument doc = QJsonDocument::fromJson(saveFile->readAll());
-    if (doc.isNull() || doc.isEmpty()){qDebug() << "NAH";}
-
-    QJsonArray jsonArr = doc.array();
-
+    QJsonArray jsonArr = QJsonDocument::fromJson(saveFile->readAll()).array();
     saveFile->close();
     delete saveFile;
 
@@ -92,5 +89,32 @@ void DataStationManager::loadFromFile(){
 }
 
 void DataStationManager::saveToFile(){
+    QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    loc += "/QGroundControl/datastations.json";
 
+    QFile *saveFile = new QFile(loc);
+
+    QJsonArray jsonArr;
+    QJsonObject jsonObj;
+    for (QList<DataStation *>::iterator i = dataStations.begin();
+         i != dataStations.end(); i++){
+        jsonObj.insert("id", (*i)->getId());
+        jsonObj.insert("lat", (*i)->getLat());
+        jsonObj.insert("lon", (*i)->getLon());
+
+        jsonArr.append(jsonObj);
+    }
+
+    QJsonDocument doc = QJsonDocument(jsonArr);
+
+    saveFile->open(QIODevice::WriteOnly);
+    saveFile->write(doc.toJson(QJsonDocument::Indented));
+    saveFile->close();
 }
+
+
+
+
+
+
+
