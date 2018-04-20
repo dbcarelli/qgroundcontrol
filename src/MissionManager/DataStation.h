@@ -5,9 +5,9 @@
 #include <QString>
 #include <QObject>
 
-class DataStation : public QObject
+class DataStation //: public QObject
 {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     DataStation();
 
@@ -18,7 +18,7 @@ public:
     double getLat() const;
     double getLon() const;
     QString getId() const;
-    Q_PROPERTY(Qbool selected READ getSelected WRITE setSelected NOTIFY selectionChanged)
+    //Q_PROPERTY(Qbool selected READ getSelected WRITE setSelected NOTIFY selectionChanged)
 
 
 private:

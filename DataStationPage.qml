@@ -38,10 +38,12 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
+                //console.warn : "QGroundControl.dataStationManager"
                 onDataStationsChanged: {
                     tableView.selection.clear()
+
                     for(var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
-                        var o = QGroundControl.dataStationManager.getDataStations()[i]
+                        var o = QGroundControl.dataStationManager.getDataStations[i]
                         if (o && o.selected) {
                             tableView.selection.select(i, i)
                         }
@@ -53,10 +55,10 @@ AnalyzePage {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.dataStationManager
+                model:              QGroundControl.DataStationManager
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
-
+                onActivated: QGroundControl.dataStationManager.setDataStationSelected(tableView.currentRow)
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -64,142 +66,53 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.dataStationManager.get(styleData.row)
-                            return o ? o.id : ""
+                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
+                            return o ? o.getId() : ""
                         }
                     }
                 }
 
                 TableViewColumn {
-                    title: qsTr("ID")
-                    width: ScreenTools.defaultFontPixelWidth * 34
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        text: {
-                            var o = QGroundControl.dataStationManager.get(styleData.row)
-                            if (o) {
-                                //-- Have we received this entry already?
-                                if(QGroundControl.dataStationManager.get(styleData.row).received) {
-                                    var d = QGroundControl.dataStationManager.get(styleData.row).time
-                                    if(d.getUTCFullYear() < 2010)
-                                        return qsTr("Date Unknown")
-                                    else
-                                        return d.toLocaleString()
-                                }
-                            }
-                            return ""
-                        }
-                    }
-                }
-
-                TableViewColumn {
-                    title: qsTr("1")
+                    title: qsTr("Longitude")
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignRight
                         text: {
-                            var o = QGroundControl.dataStationManager.get(styleData.row)
-                            return o ? o.sizeStr : ""
+                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
+                            return o ? o.getLon() : ""
                         }
                     }
                 }
 
                 TableViewColumn {
-                    title: qsTr("2")
-                    width: ScreenTools.defaultFontPixelWidth * 22
+                    title: qsTr("Latitude")
+                    width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.dataStationManager.get(styleData.row)
-                            return o ? o.status : ""
+                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
+                            return o ? o.getLat() : ""
                         }
                     }
                 }
+
             }
 
-            Column {
-                spacing:            _margin
-                Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
+//            Column {
+//                spacing:            _margin
+//                Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
-                QGCButton {
-                    enabled:    !dataController.requestingList && !dataController.downloadingLogs
-                    text:       qsTr("Refresh")
-                    width:      _butttonWidth
+//                QGCButton {
+//                    enabled:    1==1
+//                    text:       qsTr("Refresh")
+//                    width:      _butttonWidth
 
-                    onClicked: {
-                        if (!QGroundControl.multiVehicleManager.activeVehicle || QGroundControl.multiVehicleManager.activeVehicle.isOfflineEditingVehicle) {
-                            logDownloadPage.showMessage(qsTr("Log Refresh"), qsTr("You must be connected to a vehicle in order to download logs."), StandardButton.Ok)
-                        } else {
-                            dataController.refresh()
-                        }
-                    }
-                }
-
-                QGCButton {
-                    enabled:    !dataController.requestingList && !dataController.downloadingLogs && tableView.selection.count > 0
-                    text:       qsTr("Download")
-                    width:      _butttonWidth
-                    onClicked: {
-                        //-- Clear selection
-                        for(var i = 0; i < QGroundControl.dataStationManager.count; i++) {
-                            var o = QGroundControl.dataStationManager.get(i)
-                            if (o) o.selected = false
-                        }
-                        //-- Flag selected log files
-                        tableView.selection.forEach(function(rowIndex){
-                            var o = QGroundControl.dataStationManager.get(rowIndex)
-                            if (o) o.selected = true
-                        })
-                        fileDialog.qgcView =        logDownloadPage
-                        fileDialog.title =          qsTr("Select save directory")
-                        fileDialog.selectExisting = true
-                        fileDialog.folder =         QGroundControl.settingsManager.appSettings.telemetrySavePath
-                        fileDialog.selectFolder =   true
-                        fileDialog.openForLoad()
-                    }
-
-                    QGCFileDialog {
-                        id: fileDialog
-
-                        onAcceptedForLoad: {
-                            dataController.download(file)
-                            close()
-                        }
-                    }
-                }
-
-                QGCButton {
-                    enabled:    !dataController.requestingList && !dataController.downloadingLogs && QGroundControl.dataStationManager.count > 0
-                    text:       qsTr("Erase All")
-                    width:      _butttonWidth
-                    onClicked:  logDownloadPage.showDialog(eraseAllMessage,
-                                                           qsTr("Delete All Log Files"),
-                                                           logDownloadPage.showDialogDefaultWidth,
-                                                           StandardButton.Yes | StandardButton.No)
-
-                    Component {
-                        id: eraseAllMessage
-
-                        QGCViewMessage {
-                            message:    qsTr("All log files will be erased permanently. Is this really what you want?")
-
-                            function accept() {
-                                logDownloadPage.hideDialog()
-                                dataController.eraseAll()
-                            }
-                        }
-                    }
-                }
-
-                QGCButton {
-                    text:       qsTr("Cancel")
-                    width:      _butttonWidth
-                    enabled:    dataController.requestingList || dataController.downloadingLogs
-                    onClicked:  dataController.cancel()
-                }
-            } // Column - Buttons
+//                    onClicked: {
+//                        console.warn("")
+//                        //do nothing
+//                    }
+//                }
+//            } // Column - Buttons
         } // RowLayout
     } // Component
 } // AnalyzePage
