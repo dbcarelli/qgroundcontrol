@@ -5,7 +5,7 @@
 #include <QString>
 #include <QObject>
 
-class DataStation : public QObject
+class DataStation //: public QObject
 {
 Q_PROPERTY(QString id READ getId)
 Q_PROPERTY(double lon READ getLon)
