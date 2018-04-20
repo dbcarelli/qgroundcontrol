@@ -3,6 +3,8 @@
 DataStation::DataStation()
 {
     id = "01";
+    lon = -1;
+    lat = -1;
 }
 
 void DataStation::setId(QString newId){

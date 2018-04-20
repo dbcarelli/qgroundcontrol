@@ -1,5 +1,11 @@
 
 #include <QList>
+#include <QStandardPaths>
+#include <QFile>
+#include <QIODevice>
+#include <QJsonDocument>
+#include <QSaveFile>
+#include <QDebug>
 
 #include "QGCApplication.h"
 #include "QGCToolbox.h"
@@ -10,6 +16,8 @@
 class DataStationManager : public QGCTool
 {
 Q_OBJECT
+Q_PROPERTY(QList<DataStation*> dataStations READ getDataStations NOTIFY dataStationsChanged)
+
 private:
 
     DataStationLink * _dsLink;
@@ -30,8 +38,15 @@ public:
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
 
+    QList<DataStation *> getDataStations(){ return dataStations; }
+
+    void loadFromFile();
+    void saveToFile();
     // remove datastation from list?
     // void removeDS(QString targetId);
+
+signals:
+    void dataStationsChanged();
 };
 
 

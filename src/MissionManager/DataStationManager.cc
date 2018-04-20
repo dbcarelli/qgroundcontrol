@@ -5,7 +5,9 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
 {
     qmlRegisterUncreatableType<DataStationManager> ("QGroundControl", 1, 0, "DataStationManager", "Reference only");
-//    qRegisterMetaType<DataStationManager*>("DataStationManager*");
+    qmlRegisterType<DataStation>("QGroundControl", 1, 0, "DataStation");
+
+    loadFromFile();
 }
 
 DataStationManager::~DataStationManager(){
@@ -14,7 +16,7 @@ DataStationManager::~DataStationManager(){
 
 void DataStationManager::connect(QString portname){
     _dsLink = new DataStationLink(portname);
-    qInfo() << initializeDS();
+    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
 }
 
 QString DataStationManager::initializeDS(){
@@ -24,7 +26,7 @@ QString DataStationManager::initializeDS(){
         int id = (*i)->getId().toInt();
         if (id > max) max = id;
     }
-    newId = QString("%02d").arg(max + 1);
+    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
     _dsLink->setDataStationId(newId);
 
     DataStation *newStation = new DataStation();
@@ -58,5 +60,37 @@ void DataStationManager::deployDS(QString targetId){
 
 }
 
+void DataStationManager::loadFromFile(){
+    QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    loc += "/QGroundControl/datastations.json";
 
+    QFile *saveFile = new QFile(loc);
+    if (!saveFile->exists()){
+        qDebug() << "DataStationManager::loadFromFile - file does not exist at " << loc << "\n";
+        return;
+    }
 
+    saveFile->open(QIODevice::ReadOnly);
+    QJsonDocument doc = QJsonDocument::fromJson(saveFile->readAll());
+    if (doc.isNull() || doc.isEmpty()){qDebug() << "NAH";}
+
+    QJsonArray jsonArr = doc.array();
+
+    saveFile->close();
+    delete saveFile;
+
+    dataStations.clear();
+    for (QJsonArray::iterator i = jsonArr.begin(); i != jsonArr.end(); i++){
+        QJsonObject jsonObj = (*i).toObject();
+
+        DataStation *newStation = new DataStation();
+        newStation->setId(jsonObj.value("id").toString());
+        newStation->setGPSCoords(jsonObj.value("lon").toDouble(), jsonObj.value("lat").toDouble());
+        dataStations.append(newStation);
+    }
+
+}
+
+void DataStationManager::saveToFile(){
+
+}
