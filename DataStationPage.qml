@@ -71,7 +71,7 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Date")
+                    title: qsTr("ID")
                     width: ScreenTools.defaultFontPixelWidth * 34
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
@@ -93,7 +93,7 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Size")
+                    title: qsTr("1")
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
@@ -106,7 +106,7 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Status")
+                    title: qsTr("2")
                     width: ScreenTools.defaultFontPixelWidth * 22
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
