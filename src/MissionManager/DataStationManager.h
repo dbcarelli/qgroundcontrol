@@ -16,8 +16,9 @@ private:
     QList<DataStation *> dataStations;
 
 public:
-    Q_PROPERTY(QList<DataStation *> dataStations READ getDataStations NOTIFY dataStationsChanged)//add a write when we know what writing will look like
+    Q_PROPERTY(QList<DataStation *> dataStations READ getDataStations WRITE setDataStationSelected NOTIFY dataStationsChanged)//add a write when we know what writing will look like
     QList<DataStation *> getDataStations                  () { return dataStations; }
+    void setDataStationSelected                           (int i){dataStations[i]->setSelected();}
     DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
     // close _dsLink
     ~DataStationManager();
