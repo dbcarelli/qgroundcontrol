@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QObject>
 
 class DataStation
 {
