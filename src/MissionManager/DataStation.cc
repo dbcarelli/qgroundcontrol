@@ -15,7 +15,6 @@ void DataStation::setId(QString newId){
 void DataStation::setLat(double newLat){
     lat = newLat;
 }
-
 void DataStation::setLon(double newLon){
     lon = newLon;
 }
