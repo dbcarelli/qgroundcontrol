@@ -40,6 +40,8 @@ public:
 
     QList<DataStation *> getDataStations(){ return dataStations; }
 
+    Q_INVOKABLE void toggleActive(int index);
+
     void loadFromFile();
     void saveToFile();
     // remove datastation from list?

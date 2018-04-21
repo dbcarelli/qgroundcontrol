@@ -35,6 +35,8 @@ QString DataStationManager::initializeDS(){
 
     dataStations.append(newStation);
 
+    emit dataStationsChanged();
+
     return newId;
 }
 
@@ -56,6 +58,8 @@ void DataStationManager::deployDS(QString targetId){
         dataStations.append(newStation);
         return;
     }
+
+    emit dataStationsChanged();
 
 //    dataStations[index].setGPSCoords(x, y);
 
@@ -82,9 +86,12 @@ void DataStationManager::loadFromFile(){
 
         DataStation *newStation = new DataStation();
         newStation->setId(jsonObj.value("id").toString());
-        newStation->setGPSCoords(jsonObj.value("lon").toDouble(), jsonObj.value("lat").toDouble());
+        newStation->setLat(jsonObj.value("lon").toDouble());
+        newStation->setLon(jsonObj.value("lat").toDouble());
+
         dataStations.append(newStation);
     }
+    emit dataStationsChanged();
 
 }
 
@@ -112,7 +119,10 @@ void DataStationManager::saveToFile(){
     saveFile->close();
 }
 
-
+void DataStationManager::toggleActive(int index){
+    dataStations.at(index)->toggleActive();
+    emit dataStationsChanged();
+}
 
 
 
