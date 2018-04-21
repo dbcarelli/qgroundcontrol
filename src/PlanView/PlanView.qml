@@ -261,9 +261,10 @@ QGCView {
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
     function autoGenMission(coordinate, index) {
-        for (var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
-            insertDataStationItem(coordinate, index);
-        }
+        var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
+        var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
     }
     /// Inserts a new ROI mission item
     ///     @param coordinate Location to insert item
@@ -392,7 +393,7 @@ QGCView {
                         } else if (_addDataStationOnClick){
                             insertDataStationItem(coordinate, _missionController.visualItems.count)
                         } else if (_autoGenMissionOnClick){
-                            autoGenMission(coordinate, _missionController.visualItems.count)
+                            insertDataStationItem(coordinate, _missionController.visualItems.count)
                         }
 
                         break
