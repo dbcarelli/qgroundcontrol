@@ -50,6 +50,7 @@ QGCView {
     property bool   _addWaypointOnClick:        false
     property bool   _addROIOnClick:             false
     property bool   _addDataStationOnClick:     false
+    property bool   _autoGenMissionOnClick:     false
     property bool   _singleComplexItem:         _missionController.complexMissionItemNames.length === 1
     property real   _toolbarHeight:             _qgcView.height - ScreenTools.availableHeight
     property int    _editingLayer:              _layerMission
@@ -98,6 +99,9 @@ QGCView {
                 _qgcView.showDialog(applyNewAltitude, qsTr("Apply new alititude"), showDialogDefaultWidth, StandardButton.Yes | StandardButton.No)
             }
         }
+    }
+    Connections {
+        target: QGroundControl.dataStationManager
     }
 
     Component {
@@ -253,6 +257,15 @@ QGCView {
         var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index)
         _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
     }
+    ///Insert a new data station mission Item
+    ///     @param coordinate Location to insert item
+    ///     @param index Insert item at this index
+    function autoGenMission(coordinate, index) {
+        var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
+        var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
+    }
     /// Inserts a new ROI mission item
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
@@ -379,6 +392,8 @@ QGCView {
                             insertROIMissionItem(coordinate, _missionController.visualItems.count)
                         } else if (_addDataStationOnClick){
                             insertDataStationItem(coordinate, _missionController.visualItems.count)
+                        } else if (_autoGenMissionOnClick){
+                            insertDataStationItem(coordinate, _missionController.visualItems.count)
                         }
 
                         break
@@ -449,8 +464,8 @@ QGCView {
                 showAlternateIcon:  [ false, false, false, masterController.dirty, false, false, false, false ]
                 rotateImage:        [ false, false, false, masterController.syncInProgress, false, false, false, false ]
                 animateImage:       [ false, false, false, masterController.dirty, false, false, false, false ]
-                buttonEnabled:      [ true, true, true, !masterController.syncInProgress, true, true, true, true ]
-                buttonVisible:      [ true, _waypointsOnlyMode, true, true, true, _showZoom, _showZoom, true ]
+                buttonEnabled:      [ true, true, true, !masterController.syncInProgress, true, true, true, true, true ]
+                buttonVisible:      [ true, _waypointsOnlyMode, true, true, true, _showZoom, _showZoom, true, true ]
                 maxHeight:          mapScale.y - toolStrip.y
 
                 property bool _showZoom: !ScreenTools.isMobile
@@ -490,7 +505,11 @@ QGCView {
                         name:               "Out",
                         iconSource:         "/qmlimages/ZoomMinus.svg"
                     },                    {
-                        name:       "DataStation",
+                        name:       " Data \nStation",
+                        iconSource: "/qmlimages/MapAddMission.svg",///we need a new icon
+                        toggle:     true
+                    },                    {
+                        name:       "Auto-Gen\n  Mission",
                         iconSource: "/qmlimages/MapAddMission.svg",///we need a new icon
                         toggle:     true
                     }
@@ -502,11 +521,13 @@ QGCView {
                         _addWaypointOnClick = checked
                         _addROIOnClick = false
                         _addDataStationOnClick = false
+                        _autoGenMissionOnClick = false
                         break
                     case 1:
                         _addROIOnClick = checked
                         _addWaypointOnClick = false
                         _addDataStationOnClick = false
+                        _autoGenMissionOnClick = false
                         break
                     case 2:
                         if (_singleComplexItem) {
@@ -523,6 +544,13 @@ QGCView {
                         _addWaypointOnClick = false
                         _addROIOnClick = false
                         _addDataStationOnClick = checked
+                        _autoGenMissionOnClick = false
+                        break
+                    case 8:
+                        _addWaypointOnClick = false
+                        _addROIOnClick = false
+                        _addDataStationOnClick = false
+                        _autoGenMissionOnClick = checked
                         break
                     }
                 }
