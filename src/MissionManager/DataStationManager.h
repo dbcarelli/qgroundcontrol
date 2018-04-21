@@ -32,6 +32,12 @@ public:
     // Initialize _dsLink
     Q_INVOKABLE void connect(QString portname);
 
+    // getters
+    Q_INVOKABLE int numOfDataStations() {return dataStations.size(); }
+    Q_INVOKABLE int lat(int index){ return dataStations.at(index)->getLat(); }
+    Q_INVOKABLE int lon(int index){ return dataStations.at(index)->getLon(); }
+    Q_INVOKABLE QString iD(int index){ return dataStations.at(index)->getId(); }
+
     // initialize datastation, give it a new ID, returns ID
     QString initializeDS();
 
