@@ -24,9 +24,7 @@ private:
     QList<DataStation *> dataStations;
 
 public:
-    Q_PROPERTY(QList<DataStation *> dataStations READ getDataStations NOTIFY dataStationsChanged)//add a write when we know what writing will look like
-   // QList<DataStation *> getDataStations                  () { return dataStations; }
-    QList<DataStation *> getDataStations (){return dataStations;}
+
     DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
     // close _dsLink
     ~DataStationManager();
@@ -46,11 +44,6 @@ public:
     void saveToFile();
     // remove datastation from list?
     // void removeDS(QString targetId);
-    Q_INVOKABLE void setDataStationSelected(int i);
-
-    DataStation getDataStation(int i);
-signals:
-    void dataStationsChanged();
 };
 
 

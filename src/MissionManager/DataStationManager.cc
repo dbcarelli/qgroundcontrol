@@ -1,4 +1,5 @@
-#include<DataStationManager.h>
+
+#include "DataStationManager.h"
 
 DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
@@ -57,12 +58,7 @@ void DataStationManager::deployDS(QString targetId){
     }
 
 //    dataStations[index].setGPSCoords(x, y);
-}
-void DataStationManager::setDataStationSelected(int i){
-    dataStations[i]->setSelected();
-}
-DataStation DataStationManager::getDataStation(int i){
-    return *dataStations[i];
+
 }
 
 void DataStationManager::loadFromFile(){

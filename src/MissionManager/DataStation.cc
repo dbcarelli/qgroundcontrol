@@ -15,12 +15,7 @@ void DataStation::setGPSCoords(double newLon, double newLat){
     lon = newLon;
     lat = newLat;
 }
-void DataStation::setSelected(){
-    selected=!selected;
-}
-bool DataStation::getSelected(){
-    return selected;
-}
+
 double DataStation::getLat() const{
     return lat;
 }
