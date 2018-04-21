@@ -879,16 +879,16 @@ QGCView {
                     }
                 }
                 QGCButton {
-                                    text:               qsTr("Auto-Gen Mission")
-                                    Layout.fillWidth:   true
-                                    enabled:            !masterController.syncInProgress
-                                    onClicked: {
-                                        dropPanel.hide()
-                                        var numOfDataStations = 3
-                                        for (var i = 0; i < numOfDataStations; i++){
-                                            insertDataStationItem(QGroundControl.dataStationManager.coordinate(i), i)
-                                        }
-                                    }
+                    text:               qsTr("Auto-Gen Mission")
+                    Layout.fillWidth:   true
+                    enabled:            !masterController.syncInProgress
+                    onClicked: {
+                        dropPanel.hide()
+                        var numOfDataStations = 3
+                        for (var i = 0; i < numOfDataStations; i++){
+                            insertDataStationItem(QGroundControl.dataStationManager.coordinate(i), i)
+                        }
+                    }
                                 }
             }
         }
