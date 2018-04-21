@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QString>
+#include <QObject>
 
-class DataStation
+class DataStation //: public QObject
 {
 Q_PROPERTY(QString id READ getId)
 Q_PROPERTY(double lon READ getLon)
