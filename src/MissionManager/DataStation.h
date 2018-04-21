@@ -1,9 +1,10 @@
 #ifndef DATASTATION_H
 #define DATASTATION_H
 
+#include <QObject>
 #include <QString>
 
-class DataStation
+class DataStation : public QObject
 {
 Q_PROPERTY(QString id READ getId)
 Q_PROPERTY(double lon READ getLon)
@@ -22,7 +23,6 @@ public:
     void setActive(bool newActive);
     bool getActive();
     void toggleActive();
-    //Q_PROPERTY(Qbool selected READ getSelected WRITE setSelected NOTIFY selectionChanged)
 
 private:
     QString id;

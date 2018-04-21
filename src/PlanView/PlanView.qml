@@ -261,7 +261,7 @@ QGCView {
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
     function autoGenMission(coordinate, index) {
-        for (var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
+        for (var i = 0; i < QGroundControl.dataStationManager.dataStations.size(); i++) {
             insertDataStationItem(coordinate, index);
         }
     }
