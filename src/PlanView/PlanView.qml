@@ -261,8 +261,10 @@ QGCView {
     ///     @param coordinate Location to insert item
     ///     @param index Insert item at this index
     function autoGenMission(coordinate, index) {
-        var numOfDataStations = QGroundControl.dataStationManager.getNumOfStations();
-
+        var numOfDataStations = 3
+        for (var i = 0; i < numOfDataStations; i++){
+            insertDataStationItem(QGroundControl.dataStationManager.coordinate(i), index+i)
+        }
     }
     /// Inserts a new ROI mission item
     ///     @param coordinate Location to insert item
