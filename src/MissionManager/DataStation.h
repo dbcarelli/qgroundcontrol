@@ -1,12 +1,10 @@
 #ifndef DATASTATION_H
 #define DATASTATION_H
 
-#include <QObject>
 #include <QString>
 
-class DataStation : public QObject
+class DataStation
 {
-
 public:
     DataStation();
 
