@@ -5,7 +5,10 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
 {
     qmlRegisterUncreatableType<DataStationManager> ("QGroundControl", 1, 0, "DataStationManager", "Reference only");
-//    qRegisterMetaType<DataStationManager*>("DataStationManager*");
+    qmlRegisterType<DataStation>("QGroundControl", 1, 0, "DataStation");
+
+    loadFromFile();
+    saveToFile();
 }
 
 DataStationManager::~DataStationManager(){
@@ -14,7 +17,7 @@ DataStationManager::~DataStationManager(){
 
 void DataStationManager::connect(QString portname){
     _dsLink = new DataStationLink(portname);
-    qInfo() << initializeDS();
+    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
 }
 
 QString DataStationManager::initializeDS(){
@@ -24,7 +27,7 @@ QString DataStationManager::initializeDS(){
         int id = (*i)->getId().toInt();
         if (id > max) max = id;
     }
-    newId = QString("%02d").arg(max + 1);
+    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
     _dsLink->setDataStationId(newId);
 
     DataStation *newStation = new DataStation();
