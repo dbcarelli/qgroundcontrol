@@ -40,14 +40,21 @@ public:
 
     QList<DataStation *> getDataStations(){ return dataStations; }
 
-    Q_INVOKABLE QGeoCoordinate getCoordinate(int index);
-
     Q_INVOKABLE void toggleActive(int index);
 
     void loadFromFile();
     void saveToFile();
     // remove datastation from list?
     // void removeDS(QString targetId);
+
+    Q_INVOKABLE QGeoCoordinate getCoordinate(int index);
+    Q_INVOKABLE double getLat(int index){ return dataStations.at(index)->getLat(); }
+    Q_INVOKABLE double getLon(int index){ return dataStations.at(index)->getLon(); }
+    Q_INVOKABLE QString getId(int index){ return dataStations.at(index)->getId(); }
+    Q_INVOKABLE void deleteStation(int index);
+    Q_INVOKABLE bool isActive(int index){ return dataStations.at(index)->getActive(); }
+    Q_INVOKABLE void setActive(int index, bool status){ dataStations.at(index)->setActive(status); }
+    Q_INVOKABLE int getNumOfDataStations(){ return dataStations.size(); }
 
 signals:
     void dataStationsChanged();
