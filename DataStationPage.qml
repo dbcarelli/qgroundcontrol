@@ -38,9 +38,9 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
-                onDataStationsChanged: {
-
-                }
+//                onDataStationsChanged: {
+////                    ListView.forceLayout()
+//                }
             }
 
             TableView {
