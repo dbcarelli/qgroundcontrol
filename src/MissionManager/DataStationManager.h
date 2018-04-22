@@ -38,6 +38,7 @@ public:
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
 
+    QList<DataStation *> getDataStations(){ return dataStations; }
 
     Q_INVOKABLE void toggleActive(int index);
 
