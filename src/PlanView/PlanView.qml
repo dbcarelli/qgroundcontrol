@@ -889,7 +889,7 @@ QGCView {
                             insertDataStationItem(QGroundControl.dataStationManager.coordinate(i), i)
                         }
                     }
-                                }
+                }
             }
         }
     }
