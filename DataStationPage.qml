@@ -38,19 +38,16 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
-//                onDataStationsChanged: {
-//                    tableView.selection.clear()
-//                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
-//                        tableView.selection.selectAll()
-//                    }
-//                }
+                onDataStationsChanged: {
+
+                }
             }
 
             TableView {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.dataStationManager
+                model:              QGroundControl.dataStationManager.getNumOfDataStations()//what the hell is this? It works, but not sure why
                 selectionMode:      SelectionMode.MultiSelection//perhaps should be single
                 Layout.fillWidth:   true
                 TableViewColumn {
@@ -61,8 +58,6 @@ AnalyzePage {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
                             if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0  && styleData.row>=0){
-                                console.info(styleData.row)
-                                console.info(styleData.value)
                                 return QGroundControl.dataStationManager.getId(styleData.row)
                             }
                             else{
