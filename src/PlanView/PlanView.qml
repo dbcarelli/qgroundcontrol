@@ -887,21 +887,16 @@ QGCView {
                         var index = _missionController.visualItems.count
                         var itemCount = 0
                         for (var i = 0; i < numOfDataStations; i++){
-                            QGroundControl.dataStationManager.setActive(i, 1)
                             if (QGroundControl.dataStationManager.isActive(i)){
-                                console.info('deploying data station!')
-                                console.info(index+i)
 
                                 var coordinate = QGroundControl.dataStationManager.getCoordinate(i)
 
                                 var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index+itemCount)
                                 _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
-
                                 itemCount++
 
                                 var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index+itemCount)
                                 _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
-
                                 itemCount++
                             }
                         }
