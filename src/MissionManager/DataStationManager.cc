@@ -44,7 +44,7 @@ void DataStationManager::deployDS(QString targetId){
 
     int index = -1;
     for (int i = 0; i < dataStations.size(); i++){
-        if (targetId == dataStations.at(i)->getId()){
+        if (targetId == dataStations.value(i)->getId()){
             index = i;
             break;
         }
@@ -62,10 +62,6 @@ void DataStationManager::deployDS(QString targetId){
 
 //    dataStations[index].setGPSCoords(x, y);
 }
-void DataStationManager::setDataStationSelected(int i){
-    dataStations.at(i)->toggleActive();
-}
-
 void DataStationManager::loadFromFile(){
     QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     loc += "/QGroundControl/datastations.json";
@@ -121,22 +117,22 @@ void DataStationManager::saveToFile(){
 }
 
 void DataStationManager::toggleActive(int index){
-    dataStations.at(index)->toggleActive();
+    dataStations.value(index)->toggleActive();
     emit dataStationsChanged();
 }
 
 QGeoCoordinate DataStationManager::getCoordinate(int index){
     QGeoCoordinate retVal = QGeoCoordinate();
-    retVal.setLatitude(dataStations.at(index)->getLat());
-    retVal.setLongitude(dataStations.at(index)->getLon());
+    retVal.setLatitude(dataStations.value(index)->getLat());
+    retVal.setLongitude(dataStations.value(index)->getLon());
     // TODO: data station object should have altitude parameter
-    //retVal.setAltitude(dataStation.at(index).getAlt());
+    //retVal.setAltitude(dataStation.value(index).getAlt());
 
     return retVal;
 }
 
 void DataStationManager::deleteStation(int index){
-    DataStation * dataStationDead = dataStations.at(index);
+    DataStation * dataStationDead = dataStations.value(index);
     delete dataStationDead;
     dataStations.removeAt(index);
 }

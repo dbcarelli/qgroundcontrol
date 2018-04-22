@@ -39,26 +39,20 @@ AnalyzePage {
             Connections {
                 target: QGroundControl.dataStationManager
                 //console.warn : "QGroundControl.dataStationManager"
-                onDataStationsChanged: {
-                    tableView.selection.clear()
-
-                    for(var i = 0; i < QGroundControl.dataStationManager.getDataStations().size(); i++) {
-                        var o = QGroundControl.dataStationManager.getDataStations[i]
-                        if (o && o.selected) {
-                            tableView.selection.select(i, i)
-                        }
-                    }
-                }
+//                onDataStationsChanged: {
+//                    tableView.selection.clear()
+//                    tableView.selection.selectAll()
+//                }
             }
 
             TableView {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.DataStationManager
+                model:              QGroundControl.dataStationManager
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
-                onActivated: QGroundControl.dataStationManager.setDataStationSelected(tableView.currentRow)
+                onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -66,8 +60,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
-                            return o ? o.getId() : ""
+                            QGroundControl.dataStationManager.getId(styleData.row)
                         }
                     }
                 }
@@ -78,8 +71,7 @@ AnalyzePage {
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
-                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
-                            return o ? o.getLon() : ""
+                            QGroundControl.dataStationManager.getLon(styleData.row)
                         }
                     }
                 }
@@ -90,29 +82,27 @@ AnalyzePage {
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
-                            var o = QGroundControl.DataStationManager.getDataStations[styleData.row]
-                            return o ? o.getLat() : ""
+                            QGroundControl.dataStationManager.getLat(styleData.row)
                         }
                     }
                 }
 
             }
 
-//            Column {
-//                spacing:            _margin
-//                Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
+            Column {
+                spacing:            _margin
+                Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
-//                QGCButton {
-//                    enabled:    1==1
-//                    text:       qsTr("Refresh")
-//                    width:      _butttonWidth
+                QGCButton {
+                    enabled:    1==1
+                    text:       qsTr("Refresh")
+                    width:      _butttonWidth
 
-//                    onClicked: {
-//                        console.warn("")
-//                        //do nothing
-//                    }
-//                }
-//            } // Column - Buttons
+                    onClicked: {
+                        console.info(QGroundControl.dataStationManager.getId(0))
+                    }
+                }
+            } // Column - Buttons
         } // RowLayout
     } // Component
 } // AnalyzePage
