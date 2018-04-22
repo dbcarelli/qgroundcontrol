@@ -38,17 +38,12 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
-                onDataStationsChanged: {
-                    tableView.selection.clear()
-                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
-                        tableView.selection.selectAll()
-                    }
-//                    for(var i= 0; i< QGroundControl.dataStationManager.getNumOfDataStations(); i++){
-//                        if (QGroundControl.dataStationManager.isActive(i)){
-//                            tableView.selection.select(i, i)
-//                        }
+//                onDataStationsChanged: {
+//                    tableView.selection.clear()
+//                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+//                        tableView.selection.selectAll()
 //                    }
-                }
+//                }
             }
 
             TableView {
@@ -56,9 +51,8 @@ AnalyzePage {
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
                 model:              QGroundControl.dataStationManager
-                selectionMode:      SelectionMode.MultiSelection
+                selectionMode:      SelectionMode.MultiSelection//perhaps should be single
                 Layout.fillWidth:   true
-                //onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -66,8 +60,13 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
-                                QGroundControl.dataStationManager.getId(styleData.row)
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0  && styleData.row>=0){
+                                console.info(styleData.row)
+                                console.info(styleData.value)
+                                return QGroundControl.dataStationManager.getId(styleData.row)
+                            }
+                            else{
+                                return ""
                             }
                         }
                     }
@@ -80,8 +79,11 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignRight
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
-                                QGroundControl.dataStationManager.getLon(styleData.row)
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
+                                return QGroundControl.dataStationManager.getLon(styleData.row)
+                            }
+                            else{
+                               return ""
                             }
                         }
                     }
@@ -94,8 +96,27 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignRight
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
-                                QGroundControl.dataStationManager.getLat(styleData.row)
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
+                                return QGroundControl.dataStationManager.getLat(styleData.row)
+                            }
+                            else{
+                                return ""
+                            }
+                        }
+                    }
+                }
+                TableViewColumn {
+                    title: qsTr("Active")
+                    width: ScreenTools.defaultFontPixelWidth * 6
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
+                                return QGroundControl.dataStationManager.isActive(styleData.row)
+                            }
+                            else{
+                                return ""
                             }
                         }
                     }
@@ -107,12 +128,21 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    tableView.currentRow>0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
                     text:       qsTr("Delete")
                     width:      _butttonWidth
 
                     onClicked: {
                         QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
+                    }
+                }
+                QGCButton {
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    text:       qsTr("Toggle")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                         QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                     }
                 }
             } // Column - Buttons
