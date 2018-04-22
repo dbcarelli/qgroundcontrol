@@ -19,9 +19,9 @@ import QGroundControl.Controllers   1.0
 import QGroundControl.ScreenTools   1.0
 
 AnalyzePage {
-    id:                 DataStationPage
+    id:                 dataStationPage
     pageComponent:      pageComponent
-    pageName:           qsTr("Log Download")
+    pageName:           qsTr("Data Station Page")
     pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
@@ -38,11 +38,17 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager
-                //console.warn : "QGroundControl.dataStationManager"
-//                onDataStationsChanged: {
-//                    tableView.selection.clear()
-//                    tableView.selection.selectAll()
-//                }
+                onDataStationsChanged: {
+                    tableView.selection.clear()
+//                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+//                        tableView.selection.selectAll()
+//                    }
+                    for(var i= 0; i< QGroundControl.dataStationManager.getNumOfDataStations(); i++){
+                        if (QGroundControl.dataStationManager.isActive(i)){
+                            tableView.selection.select(i, i)
+                        }
+                    }
+                }
             }
 
             TableView {
@@ -52,7 +58,7 @@ AnalyzePage {
                 model:              QGroundControl.dataStationManager
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
-                onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
+                //onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -60,43 +66,36 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            QGroundControl.dataStationManager.getId(styleData.row)
+                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                                QGroundControl.dataStationManager.getId(styleData.row)
+                            }
                         }
                     }
                 }
 
                 TableViewColumn {
-                    title: qsTr("Date")
+                    title: qsTr("Longitude")
                     width: ScreenTools.defaultFontPixelWidth * 34
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
-                            QGroundControl.dataStationManager.getLon(styleData.row)
+                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                                QGroundControl.dataStationManager.getLon(styleData.row)
+                            }
                         }
                     }
                 }
 
                 TableViewColumn {
-                    title: qsTr("Size")
+                    title: qsTr("Latitude")
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         horizontalAlignment: Text.AlignRight
                         text: {
-                            QGroundControl.dataStationManager.getLat(styleData.row)
-                        }
-                    }
-                }
-
-                TableViewColumn {
-                    title: qsTr("Status")
-                    width: ScreenTools.defaultFontPixelWidth * 22
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
-                        text: {
-                            var o = dataController.model.get(styleData.row)
-                            return o ? o.status : ""
+                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                                QGroundControl.dataStationManager.getLat(styleData.row)
+                            }
                         }
                     }
                 }
@@ -107,12 +106,13 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    1==1
-                    text:       qsTr("Refresh")
+                    enabled:    tableView.currentRow>0 && tableView.currentRow<QGroundControl.dataStationManager.getNumOfDataStations()
+                    text:       qsTr("Delete")
                     width:      _butttonWidth
 
                     onClicked: {
-                        console.info(QGroundControl.dataStationManager.getId(0))
+                        //console.info(tableView.currentRow)
+                        QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
                     }
                 }
             } // Column - Buttons

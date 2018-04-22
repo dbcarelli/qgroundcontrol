@@ -45,7 +45,7 @@ void DataStationManager::deployDS(QString targetId){
 
     int index = -1;
     for (int i = 0; i < dataStations.size(); i++){
-        if (targetId == dataStations.value(i)->getId()){
+        if (targetId == dataStations.at(i)->getId()){
             index = i;
             break;
         }
@@ -120,26 +120,25 @@ void DataStationManager::saveToFile(){
 }
 
 void DataStationManager::toggleActive(int index){
-    dataStations.value(index)->toggleActive();
+    dataStations.at(index)->toggleActive();
     emit dataStationsChanged();
 }
 
 QGeoCoordinate DataStationManager::getCoordinate(int index){
     QGeoCoordinate retVal = QGeoCoordinate();
-    retVal.setLatitude(dataStations.value(index)->getLat());
-    retVal.setLongitude(dataStations.value(index)->getLon());
+    retVal.setLatitude(dataStations.at(index)->getLat());
+    retVal.setLongitude(dataStations.at(index)->getLon());
     // TODO: data station object should have altitude parameter
-    //retVal.setAltitude(dataStation.value(index).getAlt());
+    //retVal.setAltitude(dataStation.at(index).getAlt());
 
     return retVal;
 }
 
 void DataStationManager::deleteStation(int index){
-    DataStation * dataStationDead = dataStations.value(index);
+    DataStation * dataStationDead = dataStations.at(index);
     delete dataStationDead;
     dataStations.removeAt(index);
 }
-
 
 
 
