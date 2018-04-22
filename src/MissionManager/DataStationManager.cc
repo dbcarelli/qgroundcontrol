@@ -124,6 +124,14 @@ void DataStationManager::toggleActive(int index){
     emit dataStationsChanged();
 }
 
+QGeoCoordinate DataStationManager::getCoordinate(int index){
+    QGeoCoordinate retVal = QGeoCoordinate();
+    retVal.setLatitude(dataStations.at(index)->getLat());
+    retVal.setLongitude(dataStations.at(index)->getLon());
+    // TODO: data station object should have altitude parameter
+    //retVal.setAltitude(dataStation.at(index).getAlt());
+}
+
 
 
 

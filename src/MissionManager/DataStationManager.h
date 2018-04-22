@@ -40,6 +40,8 @@ public:
 
     QList<DataStation *> getDataStations(){ return dataStations; }
 
+    Q_INVOKABLE QGeoCoordinate getCoordinate(int index);
+
     Q_INVOKABLE void toggleActive(int index);
 
     void loadFromFile();
