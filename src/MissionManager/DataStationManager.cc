@@ -1,4 +1,5 @@
-#include<DataStationManager.h>
+
+#include "DataStationManager.h"
 
 DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
@@ -61,7 +62,9 @@ void DataStationManager::deployDS(QString targetId){
     emit dataStationsChanged();
 
 //    dataStations[index].setGPSCoords(x, y);
+
 }
+
 void DataStationManager::loadFromFile(){
     QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     loc += "/QGroundControl/datastations.json";

@@ -19,10 +19,10 @@ import QGroundControl.Controllers   1.0
 import QGroundControl.ScreenTools   1.0
 
 AnalyzePage {
-    id:                 dataStationPage
+    id:                 DataStationPage
     pageComponent:      pageComponent
-    pageName:           qsTr("Data Station Manager")
-    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")//change code
+    pageName:           qsTr("Log Download")
+    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -66,8 +66,8 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Longitude")
-                    width: ScreenTools.defaultFontPixelWidth * 18
+                    title: qsTr("Date")
+                    width: ScreenTools.defaultFontPixelWidth * 34
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
@@ -77,16 +77,29 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Latitude")
+                    title: qsTr("Size")
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
+                        horizontalAlignment: Text.AlignRight
                         text: {
                             QGroundControl.dataStationManager.getLat(styleData.row)
                         }
                     }
                 }
 
+                TableViewColumn {
+                    title: qsTr("Status")
+                    width: ScreenTools.defaultFontPixelWidth * 22
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            var o = dataController.model.get(styleData.row)
+                            return o ? o.status : ""
+                        }
+                    }
+                }
             }
 
             Column {

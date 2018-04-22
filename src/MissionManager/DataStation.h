@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QObject>
 
 class DataStation : public QObject
 {
@@ -24,7 +23,6 @@ public:
     void setActive(bool newActive);
     bool getActive();
     void toggleActive();
-
 
 private:
     QString id;
