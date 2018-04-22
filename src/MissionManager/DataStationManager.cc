@@ -130,6 +130,8 @@ QGeoCoordinate DataStationManager::getCoordinate(int index){
     retVal.setLongitude(dataStations.at(index)->getLon());
     // TODO: data station object should have altitude parameter
     //retVal.setAltitude(dataStation.at(index).getAlt());
+
+    return retVal;
 }
 
 
