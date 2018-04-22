@@ -22,7 +22,7 @@ AnalyzePage {
     id:                 dataStationPage
     pageComponent:      pageComponent
     pageName:           qsTr("Data Station Page")
-    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")
+    pageDescription:    qsTr("Temp Description")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -40,14 +40,14 @@ AnalyzePage {
                 target: QGroundControl.dataStationManager
                 onDataStationsChanged: {
                     tableView.selection.clear()
-//                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
-//                        tableView.selection.selectAll()
-//                    }
-                    for(var i= 0; i< QGroundControl.dataStationManager.getNumOfDataStations(); i++){
-                        if (QGroundControl.dataStationManager.isActive(i)){
-                            tableView.selection.select(i, i)
-                        }
+                    if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                        tableView.selection.selectAll()
                     }
+//                    for(var i= 0; i< QGroundControl.dataStationManager.getNumOfDataStations(); i++){
+//                        if (QGroundControl.dataStationManager.isActive(i)){
+//                            tableView.selection.select(i, i)
+//                        }
+//                    }
                 }
             }
 
@@ -66,7 +66,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
                                 QGroundControl.dataStationManager.getId(styleData.row)
                             }
                         }
@@ -75,11 +75,12 @@ AnalyzePage {
 
                 TableViewColumn {
                     title: qsTr("Longitude")
-                    width: ScreenTools.defaultFontPixelWidth * 34
+                    width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
+                        horizontalAlignment: Text.AlignRight
                         text: {
-                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
                                 QGroundControl.dataStationManager.getLon(styleData.row)
                             }
                         }
@@ -93,7 +94,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignRight
                         text: {
-                            if(QGroundControl.dataStationManager.getNumOfDataStations()>0){
+                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0){
                                 QGroundControl.dataStationManager.getLat(styleData.row)
                             }
                         }
@@ -106,12 +107,11 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    tableView.currentRow>0 && tableView.currentRow<QGroundControl.dataStationManager.getNumOfDataStations()
+                    enabled:    tableView.currentRow>0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
                     text:       qsTr("Delete")
                     width:      _butttonWidth
 
                     onClicked: {
-                        //console.info(tableView.currentRow)
                         QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
                     }
                 }
