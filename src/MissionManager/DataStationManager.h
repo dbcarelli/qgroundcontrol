@@ -34,6 +34,7 @@ public:
             map.insert("lat", dataStations.at(i)->getLat());
             map.insert("lon", dataStations.at(i)->getLon());
             map.insert("id", dataStations.at(i)->getId());
+            map.insert("active", dataStations.at(i)->getActive());
             varDataStations.append(map);
         }
         return varDataStations;
@@ -47,7 +48,7 @@ public:
     Q_INVOKABLE void connect(QString portname);
 
     // initialize datastation, give it a new ID, returns ID
-    QString initializeDS();
+    Q_INVOKABLE QString initializeDS(QString newId);
 
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
@@ -58,8 +59,7 @@ public:
     void loadFromFile();
     void saveToFile();
     // remove datastation from list?
-    // void removeDS(QString targetId);
-    Q_INVOKABLE void toggleActive(int i);
+    Q_INVOKABLE void deleteStation(int index);
 
     DataStation getDataStation(int i);
 

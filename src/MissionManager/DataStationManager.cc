@@ -20,24 +20,28 @@ void DataStationManager::connect(QString portname){
     qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
 }
 
-QString DataStationManager::initializeDS(){
-    QString newId;
-    int max = 1;
-    for (QList<DataStation*>::iterator i = dataStations.begin(); i != dataStations.end(); i++){
-        int id = (*i)->getId().toInt();
-        if (id > max) max = id;
-    }
-    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
+QString DataStationManager::initializeDS(QString newId){
     _dsLink->setDataStationId(newId);
-
-    DataStation *newStation = new DataStation();
-    newStation->setId(newId);
-
-    dataStations.append(newStation);
-
-    emit dataStationsChanged();
-
+    dataStation.append(newStation);
+    emit dataStationsChanged;
     return newId;
+//    QString newId;
+//    int max = 1;
+//    for (QList<DataStation*>::iterator i = dataStations.begin(); i != dataStations.end(); i++){
+//        int id = (*i)->getId().toInt();
+//        if (id > max) max = id;
+//    }
+//    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
+//    _dsLink->setDataStationId(newId);
+
+//    DataStation *newStation = new DataStation();
+//    newStation->setId(newId);
+
+//    dataStations.append(newStation);
+
+//    emit dataStationsChanged();
+
+//    return newId;
 }
 
 void DataStationManager::deployDS(QString targetId){
@@ -65,10 +69,6 @@ void DataStationManager::deployDS(QString targetId){
 //    dataStations[index].setGPSCoords(x, y);
 }
 
-void DataStationManager::toggleActive(int i){
-    dataStations.at(i)->toggleActive();
-    emit dataStationsChanged();
-}
 
 void DataStationManager::loadFromFile(){
     QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
@@ -129,15 +129,15 @@ void DataStationManager::toggleActive(int index){
     emit dataStationsChanged();
 }
 
-QGeoCoordinate DataStationManager::getCoordinate(int index){
-    QGeoCoordinate retVal = QGeoCoordinate();
-    retVal.setLatitude(dataStations.at(index)->getLat());
-    retVal.setLongitude(dataStations.at(index)->getLon());
-    // TODO: data station object should have altitude parameter
-    //retVal.setAltitude(dataStation.at(index).getAlt());
+//QGeoCoordinate DataStationManager::getCoordinate(int index){
+//    QGeoCoordinate retVal = QGeoCoordinate();
+//    retVal.setLatitude(dataStations.at(index)->getLat());
+//    retVal.setLongitude(dataStations.at(index)->getLon());
+//    // TODO: data station object should have altitude parameter
+//    //retVal.setAltitude(dataStation.at(index).getAlt());
 
-    return retVal;
-}
+//    return retVal;
+//}
 
 void DataStationManager::deleteStation(int index){
     DataStation * dataStationDead = dataStations.at(index);

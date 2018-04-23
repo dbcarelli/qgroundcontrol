@@ -38,16 +38,6 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager.dataStations
-                dataStationsChanged: {
-                    tableView.selection.clear()
-
-                    for(var i = 0; i < QGroundControl.dataStationManager.dataStations.size(); i++) {
-                        var o = QGroundControl.dataStationManager.dataStations.at(i)
-                        if (o && o.selected) {
-                            tableView.selection.select(i, i)
-                        }
-                    }
-                }
             }
 
             TableView {
@@ -79,7 +69,7 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignHCenter
                         text: {
                             var o = QGroundControl.dataStationManager.dataStations[styleData.row]
                             return o ? o.lon : ""
@@ -113,7 +103,7 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
                     text:       qsTr("Delete")
                     width:      _butttonWidth
 
@@ -122,12 +112,12 @@ AnalyzePage {
                     }
                 }
                 QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.size()
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
                     text:       qsTr("Toggle")
                     width:      _butttonWidth
 
                     onClicked: {
-                         QGroundControl.dataStationManager.dataStations[tableView.currentRow].toggleActive(tableView.currentRow)
+                         QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                     }
                 }
             } // Column - Buttons
