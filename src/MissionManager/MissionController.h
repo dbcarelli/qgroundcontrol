@@ -259,13 +259,13 @@ private:
     bool                    _itemsRequested;
     MissionFlightStatus_t   _missionFlightStatus;
     QString                 _surveyMissionItemName;
+    QString                 _fwLandingMissionItemName;
     QString                 _structureScanMissionItemName;
     QString                 _corridorScanMissionItemName;
     AppSettings*            _appSettings;
     double                  _progressPct;
     int                     _currentPlanViewIndex;
     VisualMissionItem*      _currentPlanViewItem;
-    QString                 _fwLandingMissionItemName;
 
     static const char*  _settingsGroup;
 

@@ -1,4 +1,5 @@
-#include<DataStationManager.h>
+
+#include "DataStationManager.h"
 
 DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     :QGCTool(app, toolbox)
@@ -63,7 +64,8 @@ void DataStationManager::deployDS(QString targetId){
 
 //    dataStations[index].setGPSCoords(x, y);
 }
-void DataStationManager::setDataStationSelected(int i){
+
+void DataStationManager::toggleActive(int i){
     dataStations.at(i)->toggleActive();
     emit dataStationsChanged();
 }
@@ -127,6 +129,21 @@ void DataStationManager::toggleActive(int index){
     emit dataStationsChanged();
 }
 
+QGeoCoordinate DataStationManager::getCoordinate(int index){
+    QGeoCoordinate retVal = QGeoCoordinate();
+    retVal.setLatitude(dataStations.at(index)->getLat());
+    retVal.setLongitude(dataStations.at(index)->getLon());
+    // TODO: data station object should have altitude parameter
+    //retVal.setAltitude(dataStation.at(index).getAlt());
+
+    return retVal;
+}
+
+void DataStationManager::deleteStation(int index){
+    DataStation * dataStationDead = dataStations.at(index);
+    delete dataStationDead;
+    dataStations.removeAt(index);
+}
 
 
 

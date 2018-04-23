@@ -21,8 +21,8 @@ import QGroundControl.ScreenTools   1.0
 AnalyzePage {
     id:                 dataStationPage
     pageComponent:      pageComponent
-    pageName:           qsTr("Data Station Manager")
-    pageDescription:    qsTr("Log Download allows you to download binary log files from your vehicle. Click Refresh to get list of available logs.")//change code
+    pageName:           qsTr("Data Station Page")
+    pageDescription:    qsTr("Temp Description")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -38,7 +38,7 @@ AnalyzePage {
 
             Connections {
                 target: QGroundControl.dataStationManager.dataStations
-                onChanged: {
+                dataStationsChanged: {
                     tableView.selection.clear()
 
                     for(var i = 0; i < QGroundControl.dataStationManager.dataStations.size(); i++) {
@@ -54,10 +54,12 @@ AnalyzePage {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
+
                 model:              QGroundControl.dataStationManager.dataStations
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
                 onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
+
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -67,6 +69,7 @@ AnalyzePage {
                         text: {
                             var o = QGroundControl.dataStationManager.dataStations[styleData.row]
                             return o ? o.id : ""
+
                         }
                     }
                 }
@@ -76,6 +79,7 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
+                        horizontalAlignment: Text.AlignRight
                         text: {
                             var o = QGroundControl.dataStationManager.dataStations[styleData.row]
                             return o ? o.lon : ""
@@ -91,7 +95,17 @@ AnalyzePage {
                         text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
                     }
                 }
-
+                TableViewColumn {
+                    title: qsTr("Active")
+                    width: ScreenTools.defaultFontPixelWidth * 6
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            return QGroundControl.dataStationManager.dataStations[styleData.row].active;
+                        }
+                    }
+                }
             }
 
             Column {
@@ -99,12 +113,21 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    1==1
-                    text:       qsTr("Refresh")
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    text:       qsTr("Delete")
                     width:      _butttonWidth
 
                     onClicked: {
-                        console.info(QGroundControl.dataStationManager.dataStations[0].lat)
+                        QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
+                    }
+                }
+                QGCButton {
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.size()
+                    text:       qsTr("Toggle")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                         QGroundControl.dataStationManager.dataStations[tableView.currentRow].toggleActive(tableView.currentRow)
                     }
                 }
             } // Column - Buttons

@@ -59,12 +59,12 @@ public:
     void saveToFile();
     // remove datastation from list?
     // void removeDS(QString targetId);
-    Q_INVOKABLE void setDataStationSelected(int i);
+    Q_INVOKABLE void toggleActive(int i);
 
     DataStation getDataStation(int i);
+
 signals:
     void dataStationsChanged();
 };
-
 
 
