@@ -140,6 +140,15 @@ AnalyzePage {
                          QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                     }
                 }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Add Data Station")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                         QGroundControl.dataStationManager.initializeDS()
+                    }
+                }
             } // Column - Buttons
         } // RowLayout
     } // Component

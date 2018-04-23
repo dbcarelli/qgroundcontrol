@@ -33,7 +33,7 @@ public:
     Q_INVOKABLE void connect(QString portname);
 
     // initialize datastation, give it a new ID, returns ID
-    QString initializeDS();
+    Q_INVOKABLE QString initializeDS();
 
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
