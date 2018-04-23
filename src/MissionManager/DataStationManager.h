@@ -13,10 +13,12 @@
 #include "DataStationLink.h"
 #include "DataStation.h"
 
+Q_DECLARE_METATYPE(DataStation)
+
 class DataStationManager : public QGCTool
 {
 Q_OBJECT
-Q_PROPERTY(QList<DataStation*> dataStations READ getDataStations NOTIFY dataStationsChanged)
+Q_PROPERTY(QVariantList dataStations READ getDataStations NOTIFY dataStationsChanged)
 
 private:
 
@@ -24,9 +26,19 @@ private:
     QList<DataStation *> dataStations;
 
 public:
-    Q_PROPERTY(QList<DataStation *> dataStations READ getDataStations NOTIFY dataStationsChanged)//add a write when we know what writing will look like
-   // QList<DataStation *> getDataStations                  () { return dataStations; }
-    QList<DataStation *> getDataStations (){return dataStations;}
+
+    QVariantList getDataStations (){
+        QVariantList varDataStations = QVariantList();
+        for (int i = 0; i < dataStations.size(); i++){
+            QMap<QString, QVariant> map = QMap<QString, QVariant>();
+            map.insert("lat", dataStations.at(i)->getLat());
+            map.insert("lon", dataStations.at(i)->getLon());
+            map.insert("id", dataStations.at(i)->getId());
+            varDataStations.append(map);
+        }
+        return varDataStations;
+    }
+
     DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
     // close _dsLink
     ~DataStationManager();

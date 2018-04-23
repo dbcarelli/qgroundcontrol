@@ -8,6 +8,14 @@ DataStation::DataStation()
     active=false;
 }
 
+DataStation::DataStation(const DataStation &other)
+{
+    id = other.getId();
+    lat = other.getLat();
+    lon = other.getLon();
+    active = other.getActive();
+}
+
 void DataStation::setId(QString newId){
     id = newId;
 }
@@ -35,7 +43,7 @@ void DataStation::setActive(bool newActive){
     active = newActive;
 }
 
-bool DataStation::getActive(){
+bool DataStation::getActive() const{
     return active;
 }
 

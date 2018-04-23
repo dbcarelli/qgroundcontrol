@@ -54,10 +54,10 @@ AnalyzePage {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.dataStationManager
+                model:              QGroundControl.dataStationManager.dataStations
                 selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
-                onActivated: QGroundControl.dataStationManager.setDataStationSelected(tableView.currentRow)
+                onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -65,8 +65,8 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.dataStationManager.getDataStations[styleData.row]
-                            return o ? o.getId() : ""
+                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
+                            return o ? o.id : ""
                         }
                     }
                 }
@@ -77,8 +77,8 @@ AnalyzePage {
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         text: {
-                            var o = QGroundControl.dataStationManager.getDataStations[styleData.row]
-                            return o ? o.getLon() : ""
+                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
+                            return o ? o.lon : ""
                         }
                     }
                 }
@@ -88,10 +88,7 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        text: {
-                            var o = QGroundControl.dataStationManager.getDataStations[styleData.row]
-                            return o ? o.getLat() : ""
-                        }
+                        text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
                     }
                 }
 
@@ -107,7 +104,7 @@ AnalyzePage {
                     width:      _butttonWidth
 
                     onClicked: {
-                        console.info(QGroundControl.dataStationManager.dataStations.at(0))
+                        console.info(QGroundControl.dataStationManager.dataStations[0].lat)
                     }
                 }
             } // Column - Buttons

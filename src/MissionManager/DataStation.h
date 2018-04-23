@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QString>
-#include <QObject>
 
 class DataStation : public QObject
 {
+Q_OBJECT
 Q_PROPERTY(QString id READ getId)
 Q_PROPERTY(double lon READ getLon)
 Q_PROPERTY(double lat READ getLat)
@@ -14,6 +14,9 @@ Q_PROPERTY(bool active READ getActive)
 
 public:
     DataStation();
+    DataStation(const DataStation& other);
+
+    ~DataStation() {};
 
     void setId(QString id);
     void setLon(double newLon);
@@ -22,7 +25,7 @@ public:
     double getLon() const;
     QString getId() const;
     void setActive(bool newActive);
-    bool getActive();
+    bool getActive() const;
     void toggleActive();
 
 private:
