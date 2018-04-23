@@ -35,6 +35,7 @@ public:
             map.insert("lon", dataStations.at(i)->getLon());
             map.insert("id", dataStations.at(i)->getId());
             map.insert("active", dataStations.at(i)->getActive());
+            map.insert("coordinate", QVariant::fromValue(dataStations.at(i)->getCoordinate()));
             varDataStations.append(map);
         }
         return varDataStations;

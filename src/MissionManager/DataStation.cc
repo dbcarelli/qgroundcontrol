@@ -6,6 +6,7 @@ DataStation::DataStation()
     lon = -1;
     lat = -1;
     active=false;
+    coordinate = QGeoCoordinate(0,0,0);
 }
 
 DataStation::DataStation(const DataStation &other)
