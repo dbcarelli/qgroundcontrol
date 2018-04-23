@@ -48,7 +48,7 @@ AnalyzePage {
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
                 model:              QGroundControl.dataStationManager.getNumOfDataStations()//what the hell is this? It works, but not sure why
-                selectionMode:      SelectionMode.MultiSelection//perhaps should be single
+                selectionMode:      SelectionMode.SingleSelection//perhaps should be single
                 Layout.fillWidth:   true
                 TableViewColumn {
                     title: qsTr("Id")
@@ -128,7 +128,15 @@ AnalyzePage {
                     width:      _butttonWidth
 
                     onClicked: {
-                        QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
+                        deleteDialog.open()
+
+                    }
+                    Dialog {
+                        id: deleteDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+                        onAccepted: QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
                     }
                 }
                 QGCButton {
