@@ -55,6 +55,7 @@ void DataStationManager::deployDS(QString targetId){
         newStation->setId(targetId);
 //        newStation->setGPSCoords(x, y);
         dataStations.append(newStation);
+        emit dataStationsChanged();
         return;
     }
 
@@ -64,6 +65,7 @@ void DataStationManager::deployDS(QString targetId){
 }
 void DataStationManager::setDataStationSelected(int i){
     dataStations.at(i)->toggleActive();
+    emit dataStationsChanged();
 }
 
 void DataStationManager::loadFromFile(){

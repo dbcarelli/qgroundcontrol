@@ -37,8 +37,8 @@ AnalyzePage {
             height: availableHeight
 
             Connections {
-                target: QGroundControl.dataStationManager
-                onDataStationsChanged: {
+                target: QGroundControl.dataStationManager.dataStations
+                onChanged: {
                     tableView.selection.clear()
 
                     for(var i = 0; i < QGroundControl.dataStationManager.dataStations.size(); i++) {
