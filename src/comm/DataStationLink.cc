@@ -1,3 +1,6 @@
+
+
+
 //Parse in
 //Parse Out
 //Reset DataStation
@@ -21,6 +24,7 @@ DataStationLink::DataStationLink(QString portname){
     serialPort->write(buffer.toUtf8());
 }
 
+
 int DataStationLink::_write(QString buffer){
     return serialPort->write(buffer.toUtf8());
 }
@@ -32,6 +36,10 @@ QString DataStationLink::_read(size_t size){
 int DataStationLink::setDataStationId(QString newId){
     // write the preamble to the data station
     _write(preamble);
+
+    // send the factory ID
+    QString factoryID = "01";
+    _write(factoryID);
 
     // send the RESET_ID command, 4
     QString command = "4";
