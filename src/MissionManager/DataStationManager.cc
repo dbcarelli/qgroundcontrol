@@ -20,13 +20,15 @@ DataStationManager::~DataStationManager(){
 void DataStationManager::connect(QString portname){
     if (_dsLink != nullptr) delete _dsLink;
     _dsLink = new DataStationLink(portname);
-    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
+//    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS("02");
 }
 
 QString DataStationManager::initializeDS(QString newId){
     _dsLink->setDataStationId(newId);
-    dataStation.append(newStation);
-    emit dataStationsChanged;
+    DataStation *newStation = new DataStation();
+    newStation->setId(newId);
+    dataStations.append(newStation);
+    emit dataStationsChanged();
     return newId;
 //    QString newId;
 //    int max = 1;

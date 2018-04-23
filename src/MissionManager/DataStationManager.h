@@ -63,7 +63,6 @@ public:
 
     DataStation getDataStation(int i);
 
-    QList<DataStation *> getDataStations(){ return dataStations; }
 signals:
     void dataStationsChanged();
 };
