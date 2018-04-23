@@ -6,6 +6,7 @@
 
 class DataStation : public QObject
 {
+Q_OBJECT
 Q_PROPERTY(QString id READ getId)
 Q_PROPERTY(double lon READ getLon)
 Q_PROPERTY(double lat READ getLat)
