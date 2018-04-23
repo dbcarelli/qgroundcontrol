@@ -38,11 +38,10 @@ public:
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
 
-    QList<DataStation *> getDataStations(){ return dataStations; }
-
     Q_INVOKABLE void toggleActive(int index);
 
     void loadFromFile();
+
     void saveToFile();
     // remove datastation from list?
     // void removeDS(QString targetId);
@@ -56,6 +55,7 @@ public:
     Q_INVOKABLE void setActive(int index, bool status){ dataStations.at(index)->setActive(status); }
     Q_INVOKABLE int getNumOfDataStations(){ return dataStations.size(); }
 
+    QList<DataStation *> getDataStations(){ return dataStations; }
 signals:
     void dataStationsChanged();
 };

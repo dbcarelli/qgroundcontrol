@@ -7,6 +7,8 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     qmlRegisterUncreatableType<DataStationManager> ("QGroundControl", 1, 0, "DataStationManager", "Reference only");
     qmlRegisterType<DataStation>("QGroundControl", 1, 0, "DataStation");
 
+    _dsLink = nullptr;
+
     loadFromFile();
     saveToFile();
 }
@@ -16,11 +18,16 @@ DataStationManager::~DataStationManager(){
 }
 
 void DataStationManager::connect(QString portname){
+    if (_dsLink != nullptr) delete _dsLink;
     _dsLink = new DataStationLink(portname);
     qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
 }
 
 QString DataStationManager::initializeDS(){
+    if (!_dsLink){
+        qDebug() << "not connected!";
+        return "";
+    }
     QString newId;
     int max = 1;
     for (QList<DataStation*>::iterator i = dataStations.begin(); i != dataStations.end(); i++){
@@ -28,19 +35,26 @@ QString DataStationManager::initializeDS(){
         if (id > max) max = id;
     }
     newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
-    _dsLink->setDataStationId(newId);
+    if (_dsLink->setDataStationId(newId)){
 
-    DataStation *newStation = new DataStation();
-    newStation->setId(newId);
+        DataStation *newStation = new DataStation();
+        newStation->setId(newId);
 
-    dataStations.append(newStation);
+        dataStations.append(newStation);
 
-    emit dataStationsChanged();
+        emit dataStationsChanged();
 
-    return newId;
+        return newId;
+    }else{
+        return "-1";
+    }
 }
 
 void DataStationManager::deployDS(QString targetId){
+    if (!_dsLink){
+        qDebug() << "not connected!";
+        return;
+    }
     QString coords = _dsLink->deployDataStation(targetId);
 
     int index = -1;
