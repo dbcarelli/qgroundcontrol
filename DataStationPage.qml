@@ -37,19 +37,19 @@ AnalyzePage {
             height: availableHeight
 
             Connections {
-                target: QGroundControl.dataStationManager
-//                onDataStationsChanged: {
-////                    ListView.forceLayout()
-//                }
+                target: QGroundControl.dataStationManager.dataStations
             }
 
             TableView {
                 id: tableView
                 anchors.top:        parent.top
                 anchors.bottom:     parent.bottom
-                model:              QGroundControl.dataStationManager.getNumOfDataStations()//what the hell is this? It works, but not sure why
-                selectionMode:      SelectionMode.MultiSelection//perhaps should be single
+
+                model:              QGroundControl.dataStationManager.dataStations
+                selectionMode:      SelectionMode.MultiSelection
                 Layout.fillWidth:   true
+                onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
+
                 TableViewColumn {
                     title: qsTr("Id")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -57,12 +57,9 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0  && styleData.row>=0){
-                                return QGroundControl.dataStationManager.getId(styleData.row)
-                            }
-                            else{
-                                return ""
-                            }
+                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
+                            return o ? o.id : ""
+
                         }
                     }
                 }
@@ -72,14 +69,10 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignHCenter
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
-                                return QGroundControl.dataStationManager.getLon(styleData.row)
-                            }
-                            else{
-                               return ""
-                            }
+                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
+                            return o ? o.lon : ""
                         }
                     }
                 }
@@ -89,15 +82,7 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignRight
-                        text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
-                                return QGroundControl.dataStationManager.getLat(styleData.row)
-                            }
-                            else{
-                                return ""
-                            }
-                        }
+                        text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
                     }
                 }
                 TableViewColumn {
@@ -107,12 +92,7 @@ AnalyzePage {
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            if(styleData.row<QGroundControl.dataStationManager.getNumOfDataStations() && QGroundControl.dataStationManager.getNumOfDataStations()>0 && styleData.row>=0){
-                                return QGroundControl.dataStationManager.isActive(styleData.row)
-                            }
-                            else{
-                                return ""
-                            }
+                            return QGroundControl.dataStationManager.dataStations[styleData.row].active;
                         }
                     }
                 }
@@ -123,7 +103,7 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
                     text:       qsTr("Delete")
                     width:      _butttonWidth
 
@@ -132,7 +112,7 @@ AnalyzePage {
                     }
                 }
                 QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.getNumOfDataStations()
+                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
                     text:       qsTr("Toggle")
                     width:      _butttonWidth
 
