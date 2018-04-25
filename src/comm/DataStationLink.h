@@ -19,7 +19,7 @@ public:
     ~DataStationLink(){serialPort->close();}
 
     int setDataStationId(QString newId);
-    QString deployDataStation(QString targetId);
+    QString deployDataStation(QString targetId, bool testStatus);
 
 };
 

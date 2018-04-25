@@ -26,9 +26,10 @@ int DataStationLink::_write(QString buffer){
 QString DataStationLink::_read(size_t size){
     QString rcv = "";
     for (int i = 0; i < size; i++){
-        serialPort->waitForReadyRead(5000);
+        serialPort->waitForReadyRead(100);
         rcv += QString::fromUtf8(serialPort->read(1));
     }
+    qInfo() << "read: "+rcv;
     return rcv;
 }
 
@@ -64,7 +65,7 @@ int DataStationLink::setDataStationId(QString newId){
     return 0;
 }
 
-QString DataStationLink::deployDataStation(QString targetId){
+QString DataStationLink::deployDataStation(QString targetId, bool testStatus){
     // write the preamble to the data station
     _write(preamble);
 
@@ -73,8 +74,20 @@ QString DataStationLink::deployDataStation(QString targetId){
 
     // send the STATUS_REQUEST command, 5
     QString command = "5";
+    if(testStatus){
+        command = "6";
+    }
     _write(command);
 
+    serialPort->flush();
+
+    // check for post amble and ID confirmation
+    if (_read(1) != 'c') { return "Failed: I say street, you say cat!"; }
+    if (_read(1) != 'a') { return "Failed: I say street, you say cat!"; }
+    if (_read(1) != 't') { return "Failed: I say street, you say cat!"; }
+    if (_read(1) != targetId.at(0)) { return "Failed: ID mismatch"; }
+    if (_read(1) != targetId.at(1)) { return "Failed: ID mismatch"; }
+    if (_read(1) != command){return "Failed: command mismatch"; }
     // receive all the information in the form a QString that will be parsed
     // later. The first char should be a prelimitor.
     QString retVal = "";

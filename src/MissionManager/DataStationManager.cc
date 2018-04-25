@@ -54,15 +54,15 @@ void DataStationManager::deployDS(QString targetId, bool testStatus){
         return;
     }
 
-    QString coords = _dsLink->deployDataStation(targetId);
+    QString coords = _dsLink->deployDataStation(targetId, testStatus);
 
     if(testStatus){
         if(coords=="245233230,544344570"){
-        emit testPassed();
+            emit testPassed();
             return;
         }
         emit testFailed();
-        qInfo() << coords;
+        qInfo() << "coords: "+coords;
         return;
     }
 

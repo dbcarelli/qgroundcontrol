@@ -158,7 +158,7 @@ AnalyzePage {
                         id: deployDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: QGroundControl.dataStationManager.deployDS(answerDep.value, testStatus.checked)
+                        onAccepted: QGroundControl.dataStationManager.deployDS(answerDep.text, testStatus.checked)
                         ColumnLayout {
                             id: columnDep
                             width: parent ? parent.width : 100
@@ -174,7 +174,7 @@ AnalyzePage {
                                     text: "ID"
                                     Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
                                 }
-                                SpinBox {
+                                TextField {
                                     id: answerDep
                                     onEditingFinished: deployDialog.click(StandardButton.Ok)
                                 }
@@ -194,7 +194,7 @@ AnalyzePage {
 
                     onClicked: {
                         initDialog.open()
-                        QGroundControl.dataStationManager.initializeDS(answerInit.value)
+                        QGroundControl.dataStationManager.initializeDS(answerInit.text)
                     }
                     Dialog {
                         id: initDialog
@@ -216,7 +216,7 @@ AnalyzePage {
                                     text: "ID"
                                     Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
                                 }
-                                SpinBox {
+                                TextField {
                                     id: answerInit
                                     onEditingFinished: initDialog.click(StandardButton.Ok)
                                 }
