@@ -13,10 +13,12 @@
 #include "DataStationLink.h"
 #include "DataStation.h"
 
+Q_DECLARE_METATYPE(DataStation)
+
 class DataStationManager : public QGCTool
 {
 Q_OBJECT
-Q_PROPERTY(QList<DataStation*> dataStations READ getDataStations NOTIFY dataStationsChanged)
+Q_PROPERTY(QVariantList dataStations READ getDataStations NOTIFY dataStationsChanged)
 
 private:
 
@@ -24,6 +26,20 @@ private:
     QList<DataStation *> dataStations;
 
 public:
+
+    QVariantList getDataStations (){
+        QVariantList varDataStations = QVariantList();
+        for (int i = 0; i < dataStations.size(); i++){
+            QMap<QString, QVariant> map = QMap<QString, QVariant>();
+            map.insert("lat", dataStations.at(i)->getLat());
+            map.insert("lon", dataStations.at(i)->getLon());
+            map.insert("id", dataStations.at(i)->getId());
+            map.insert("active", dataStations.at(i)->getActive());
+            map.insert("coordinate", QVariant::fromValue(dataStations.at(i)->getCoordinate()));
+            varDataStations.append(map);
+        }
+        return varDataStations;
+    }
 
     DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
     // close _dsLink
@@ -33,28 +49,19 @@ public:
     Q_INVOKABLE void connect(QString portname);
 
     // initialize datastation, give it a new ID, returns ID
-    Q_INVOKABLE QString initializeDS();
+    Q_INVOKABLE QString initializeDS(QString newId);
 
     // get datastation's coordinates, mark as deployed
     void deployDS(QString targetId);
-
-    QList<DataStation *> getDataStations(){ return dataStations; }
 
     Q_INVOKABLE void toggleActive(int index);
 
     void loadFromFile(QString path);
     void saveToFile(QString path);
     // remove datastation from list?
-    // void removeDS(QString targetId);
-
-    Q_INVOKABLE QGeoCoordinate getCoordinate(int index);
-    Q_INVOKABLE double getLat(int index){ return dataStations.at(index)->getLat(); }
-    Q_INVOKABLE double getLon(int index){ return dataStations.at(index)->getLon(); }
-    Q_INVOKABLE QString getId(int index){ return dataStations.at(index)->getId(); }
     Q_INVOKABLE void deleteStation(int index);
-    Q_INVOKABLE bool isActive(int index){ return dataStations.at(index)->getActive(); }
-    Q_INVOKABLE void setActive(int index, bool status){ dataStations.at(index)->setActive(status); }
-    Q_INVOKABLE int getNumOfDataStations(){ return dataStations.size(); }
+
+    DataStation getDataStation(int i);
 
 signals:
     void dataStationsChanged();

@@ -6,6 +6,14 @@ DataStation::DataStation()
     lon = -1;
     lat = -1;
     active=false;
+    coordinate = QGeoCoordinate(0,0,0);
+}
+
+DataStation::DataStation(const DataStation &other)
+{
+    id = other.getId();
+    coordinate = other.getCoordinate();
+    active = other.getActive();
 }
 
 void DataStation::setId(QString newId){
@@ -13,18 +21,18 @@ void DataStation::setId(QString newId){
 }
 
 void DataStation::setLat(double newLat){
-    lat = newLat;
+    coordinate.setLatitude(newLat);
 }
 void DataStation::setLon(double newLon){
-    lon = newLon;
+    coordinate.setLongitude(newLon);
 }
 
 double DataStation::getLat() const{
-    return lat;
+    return coordinate.latitude();
 }
 
 double DataStation::getLon() const{
-    return lon;
+    return coordinate.longitude();
 }
 
 QString DataStation::getId() const{
@@ -35,7 +43,7 @@ void DataStation::setActive(bool newActive){
     active = newActive;
 }
 
-bool DataStation::getActive(){
+bool DataStation::getActive() const{
     return active;
 }
 
@@ -43,4 +51,7 @@ void DataStation::toggleActive(){
     active = !active;
 }
 
+QGeoCoordinate DataStation::getCoordinate() const{
+    return coordinate;
+}
 

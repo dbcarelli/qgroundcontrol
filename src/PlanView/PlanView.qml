@@ -883,13 +883,13 @@ QGCView {
                     Layout.fillWidth:   true
                     enabled:            !masterController.syncInProgress
                     onClicked: {
-                        var numOfDataStations = QGroundControl.dataStationManager.getNumOfDataStations()
+                        var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
                         var itemCount = 0
                         for (var i = 0; i < numOfDataStations; i++){
-                            if (QGroundControl.dataStationManager.isActive(i)){
+                            if (QGroundControl.dataStationManager.dataStations[i].active){
 
-                                var coordinate = QGroundControl.dataStationManager.getCoordinate(i)
+                                var coordinate = QGroundControl.dataStationManager.dataStations[i].coordinate
 
                                 var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index+itemCount)
                                 _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
