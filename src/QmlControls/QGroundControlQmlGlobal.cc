@@ -78,6 +78,7 @@ void QGroundControlQmlGlobal::setToolbox(QGCToolbox* toolbox)
     _firmwarePluginManager  = toolbox->firmwarePluginManager();
     _settingsManager        = toolbox->settingsManager();
     _dataStationManager     = toolbox->dataStationManager();
+    _landingSequenceManager = toolbox->landingSequenceManager();
 
 #ifndef __mobile__
    GPSManager *gpsManager = toolbox->gpsManager();

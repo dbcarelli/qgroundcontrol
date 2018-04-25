@@ -33,6 +33,7 @@ class MAVLinkLogManager;
 class QGCCorePlugin;
 class SettingsManager;
 class DataStationManager;
+class LandingSequenceManager;
 
 /// This is used to manage all of our top level services/tools
 class QGCToolbox : public QObject {
@@ -58,6 +59,7 @@ public:
     QGCCorePlugin*              corePlugin(void)                { return _corePlugin; }
     SettingsManager*            settingsManager(void)           { return _settingsManager; }
     DataStationManager*         dataStationManager(void)        { return _dataStationManager; }
+    LandingSequenceManager*     landingSequenceManager(void)    { return _landingSequenceManager; }
 
 #ifndef __mobile__
     GPSManager*                 gpsManager(void)                { return _gpsManager; }
@@ -89,6 +91,7 @@ private:
     QGCCorePlugin*              _corePlugin;
     SettingsManager*            _settingsManager;
     DataStationManager*         _dataStationManager;
+    LandingSequenceManager*     _landingSequenceManager;
 
     friend class QGCApplication;
 };
