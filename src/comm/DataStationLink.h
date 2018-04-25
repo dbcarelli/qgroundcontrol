@@ -1,9 +1,11 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QIODevice>
+#include <QObject>
 
-class DataStationLink
+class DataStationLink : public QObject
 {
+Q_OBJECT
 private:
     bool connected;
     QSerialPort * serialPort;
@@ -21,5 +23,16 @@ public:
     int setDataStationId(QString newId);
     QString deployDataStation(QString targetId);
 
+    bool getConnected() { return connected; }
+
+public slots:
+    void serialErrorHandler(QSerialPort::SerialPortError err);
+
+signals:
+    void connectedChanged(bool isOpen);
 };
+
+
+
+
 

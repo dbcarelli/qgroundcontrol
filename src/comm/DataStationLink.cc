@@ -12,7 +12,12 @@
 
 //Additionally, the gui will need modificaiton to acess these features.
 DataStationLink::DataStationLink(QString portname){
+    qDebug() << "Creating new DataStationLink";
     serialPort = new QSerialPort(portname);
+
+    connected = true;
+
+    QObject::connect(serialPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(serialErrorHandler(QSerialPort::SerialPortError)));
 
     serialPort->open(QIODevice::ReadWrite);
     serialPort->setBaudRate(QSerialPort::Baud57600);
@@ -26,7 +31,7 @@ int DataStationLink::_write(QString buffer){
 QString DataStationLink::_read(size_t size){
     QString rcv = "";
     for (int i = 0; i < size; i++){
-        serialPort->waitForReadyRead(5000);
+        serialPort->waitForReadyRead(2000);
         rcv += QString::fromUtf8(serialPort->read(1));
     }
     return rcv;
@@ -92,4 +97,33 @@ QString DataStationLink::deployDataStation(QString targetId){
       }
     }
 
+}
+
+void DataStationLink::serialErrorHandler(QSerialPort::SerialPortError err){
+    switch (err){
+    case QSerialPort::OpenError:
+        qDebug() << "DataStationLink::serialErrorHandler - OpenError";
+        connected = false;
+        emit connectedChanged(false);
+        break;
+    case QSerialPort::NotOpenError:
+        qDebug() << "DataStationLink::serialErrorHandler - NotOpenError";
+        connected = false;
+        emit connectedChanged(false);
+        break;
+    case QSerialPort::ResourceError:
+        qDebug() << "DataStationLink::serialErrorHandler - ResourceError";
+        connected = false;
+        emit connectedChanged(false);
+        break;
+    case QSerialPort::WriteError:
+        qDebug() << "DataStationLink::serialErrorHandler - WriteError";
+        break;
+    case QSerialPort::ReadError:
+        qDebug() << "DataStationLink::serialErrorHandler - ReadError";
+        break;
+    case QSerialPort::TimeoutError:
+        qDebug() << "DataStationLink::serialErrorHandler - TimeoutError";
+        break;
+    }
 }

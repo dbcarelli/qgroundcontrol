@@ -20,7 +20,8 @@ DataStationManager::~DataStationManager(){
 void DataStationManager::connect(QString portname){
     if (_dsLink != nullptr) delete _dsLink;
     _dsLink = new DataStationLink(portname);
-//    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS("02");
+    connected = _dsLink->getConnected();
+    QObject::connect(_dsLink, SIGNAL(connectedChanged(bool)), this, SLOT(dsLinkConnectedChanged(bool)));
 }
 
 QString DataStationManager::initializeDS(QString newId){
@@ -30,23 +31,6 @@ QString DataStationManager::initializeDS(QString newId){
     dataStations.append(newStation);
     emit dataStationsChanged();
     return newId;
-//    QString newId;
-//    int max = 1;
-//    for (QList<DataStation*>::iterator i = dataStations.begin(); i != dataStations.end(); i++){
-//        int id = (*i)->getId().toInt();
-//        if (id > max) max = id;
-//    }
-//    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
-//    _dsLink->setDataStationId(newId);
-
-//    DataStation *newStation = new DataStation();
-//    newStation->setId(newId);
-
-//    dataStations.append(newStation);
-
-//    emit dataStationsChanged();
-
-//    return newId;
 }
 
 void DataStationManager::deployDS(QString targetId){
@@ -138,22 +122,17 @@ void DataStationManager::toggleActive(int index){
     emit dataStationsChanged();
 }
 
-//QGeoCoordinate DataStationManager::getCoordinate(int index){
-//    QGeoCoordinate retVal = QGeoCoordinate();
-//    retVal.setLatitude(dataStations.at(index)->getLat());
-//    retVal.setLongitude(dataStations.at(index)->getLon());
-//    // TODO: data station object should have altitude parameter
-//    //retVal.setAltitude(dataStation.at(index).getAlt());
-
-//    return retVal;
-//}
 
 void DataStationManager::deleteStation(int index){
     DataStation * dataStationDead = dataStations.at(index);
     delete dataStationDead;
     dataStations.removeAt(index);
+    emit dataStationsChanged();
 }
 
-
+void DataStationManager::dsLinkConnectedChanged(bool isOpen){
+    connected = isOpen;
+    emit connectedChanged();
+}
 
 

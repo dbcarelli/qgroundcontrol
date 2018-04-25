@@ -19,13 +19,20 @@ class DataStationManager : public QGCTool
 {
 Q_OBJECT
 Q_PROPERTY(QVariantList dataStations READ getDataStations NOTIFY dataStationsChanged)
+Q_PROPERTY(bool connected READ getConnected NOTIFY connectedChanged)
 
 private:
 
     DataStationLink * _dsLink;
     QList<DataStation *> dataStations;
+    bool connected = false;
 
 public:
+    DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
+    // close _dsLink
+    ~DataStationManager();
+
+    bool getConnected() { return connected; }
 
     QVariantList getDataStations (){
         QVariantList varDataStations = QVariantList();
@@ -40,10 +47,6 @@ public:
         }
         return varDataStations;
     }
-
-    DataStationManager(QGCApplication *app, QGCToolbox *toolbox);
-    // close _dsLink
-    ~DataStationManager();
 
     // Initialize _dsLink
     Q_INVOKABLE void connect(QString portname);
@@ -66,6 +69,10 @@ public:
 
 signals:
     void dataStationsChanged();
+    void connectedChanged();
+
+public slots:
+    void dsLinkConnectedChanged(bool isOpen);
 };
 
 
