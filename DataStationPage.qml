@@ -46,7 +46,7 @@ AnalyzePage {
                 anchors.bottom:     parent.bottom
 
                 model:              QGroundControl.dataStationManager.dataStations
-                selectionMode:      SelectionMode.MultiSelection
+                selectionMode:      SelectionMode.SingleSelection
                 Layout.fillWidth:   true
                 onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
 
@@ -104,15 +104,6 @@ AnalyzePage {
 
                 QGCButton {
                     enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
-                    text:       qsTr("Delete")
-                    width:      _butttonWidth
-
-                    onClicked: {
-                        QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
-                    }
-                }
-                QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
                     text:       qsTr("Toggle")
                     width:      _butttonWidth
 
@@ -122,20 +113,103 @@ AnalyzePage {
                 }
                 QGCButton {
                     enabled:    true
-                    text:       qsTr("Initialize DS")
-                    width:      _butttonWidth
-
-                    onClicked: {
-                         QGroundControl.dataStationManager.initializeDS()
-                    }
-                }
-                QGCButton {
-                    enabled:    true
                     text:       qsTr("Deploy DS")
                     width:      _butttonWidth
 
                     onClicked: {
-                         QGroundControl.dataStationManager.deployDS()
+                        deployDialog.open()
+                        QGroundControl.dataStationManager.deployDS(answerDep.value)
+                    }
+                    Dialog {
+                        id: deployDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+                        ColumnLayout {
+                            id: columnDep
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "<b>What</b> is the average airspeed velocity of an unladen European swallow?"
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                            RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                Label {
+                                    text: "ID"
+                                    Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
+                                }
+                                SpinBox {
+                                    id: answerDep
+                                    onEditingFinished: deployDialog.click(StandardButton.Ok)
+                                }
+                            }
+                        }
+                    }
+                }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Initialize DS")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                        initDialog.open()
+                        QGroundControl.dataStationManager.initializeDS(answerInit.value)
+                    }
+                    Dialog {
+                        id: initDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+
+                        ColumnLayout {
+                            id: columnInit
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "<b>What</b> is the average airspeed velocity of an unladen European swallow?"
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                            RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                Label {
+                                    text: "ID"
+                                    Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
+                                }
+                                SpinBox {
+                                    id: answerInit
+                                    onEditingFinished: initDialog.click(StandardButton.Ok)
+                                }
+                            }
+                        }
+                    }
+                }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Delete DS")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                        deleteDialog.open()
+                    }
+                    Dialog {
+                        id: deleteDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
+                                    deleteDialog.close()}
+                        onRejected: deleteDialog.close()
+                        ColumnLayout {
+                            id: columnDel
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Are you sure you want to delete Data Station "+QGroundControl.dataStationManager.dataStations[styleData.row].id+"?"
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                        }
                     }
                 }
             } // Column - Buttons
