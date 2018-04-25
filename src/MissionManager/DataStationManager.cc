@@ -59,6 +59,7 @@ void DataStationManager::deployDS(QString targetId, bool testStatus){
     if(testStatus){
         if(coords=="245233230,544344570"){
             emit testPassed();
+            qInfo() << "coords: "+coords;
             return;
         }
         emit testFailed();

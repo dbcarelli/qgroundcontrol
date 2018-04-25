@@ -23,10 +23,10 @@ int DataStationLink::_write(QString buffer){
     return serialPort->write(buffer.toUtf8());
 }
 
-QString DataStationLink::_read(size_t size){
+QString DataStationLink::_read(size_t size, int time){
     QString rcv = "";
     for (int i = 0; i < size; i++){
-        serialPort->waitForReadyRead(100);
+        serialPort->waitForReadyRead(time);
         rcv += QString::fromUtf8(serialPort->read(1));
     }
     qInfo() << "read: "+rcv;
@@ -53,7 +53,6 @@ int DataStationLink::setDataStationId(QString newId){
 
     // send the postlimitor
     _write(postlimitor);
-
     // wait for receipt confirmation, if recive the pos-amble--> success
 //    QTest::qSleep(10000);
     QString confirmation = _read(3);
@@ -78,16 +77,16 @@ QString DataStationLink::deployDataStation(QString targetId, bool testStatus){
         command = "6";
     }
     _write(command);
-
     serialPort->flush();
 
     // check for post amble and ID confirmation
-    if (_read(1) != 'c') { return "Failed: I say street, you say cat!"; }
+    if (_read(1, 5000) != 'c') { return "Failed: I say street, you say cat!"; }
     if (_read(1) != 'a') { return "Failed: I say street, you say cat!"; }
     if (_read(1) != 't') { return "Failed: I say street, you say cat!"; }
     if (_read(1) != targetId.at(0)) { return "Failed: ID mismatch"; }
     if (_read(1) != targetId.at(1)) { return "Failed: ID mismatch"; }
     if (_read(1) != command){return "Failed: command mismatch"; }
+
     // receive all the information in the form a QString that will be parsed
     // later. The first char should be a prelimitor.
     QString retVal = "";

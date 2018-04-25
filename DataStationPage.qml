@@ -176,7 +176,6 @@ AnalyzePage {
                                 }
                                 TextField {
                                     id: answerDep
-                                    onEditingFinished: deployDialog.click(StandardButton.Ok)
                                 }
                                 CheckBox {
                                     id: testStatus
@@ -205,7 +204,7 @@ AnalyzePage {
                             id: columnInit
                             width: parent ? parent.width : 100
                             Label {
-                                text: "<b>What</b> is the average airspeed velocity of an unladen European swallow?"
+                                text: "Enter the ID of the Data Station to be initialized."
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap
@@ -218,7 +217,7 @@ AnalyzePage {
                                 }
                                 TextField {
                                     id: answerInit
-                                    onEditingFinished: initDialog.click(StandardButton.Ok)
+                                    //onEditingFinished: initDialog.click(StandardButton.Ok)
                                 }
                             }
                         }

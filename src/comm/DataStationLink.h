@@ -11,7 +11,7 @@ private:
     QString prelimitor = "<";
     QString postlimitor = ">";
 
-    QString _read(size_t size);
+    QString _read(size_t size, int time=100);
     int _write(QString buffer);
 
 public:
