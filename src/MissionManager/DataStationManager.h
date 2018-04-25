@@ -52,7 +52,7 @@ public:
     Q_INVOKABLE QString initializeDS(QString newId);
 
     // get datastation's coordinates, mark as deployed
-    void deployDS(QString targetId);
+    Q_INVOKABLE void deployDS(QString targetId);
 
     Q_INVOKABLE void toggleActive(int index);
 
