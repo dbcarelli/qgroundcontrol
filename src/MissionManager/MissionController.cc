@@ -475,6 +475,26 @@ int MissionController::insertComplexMissionItem(QString itemName, QGeoCoordinate
     return newItem->sequenceNumber();
 }
 
+int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i)
+{
+    FixedWingLandingComplexItem* newItem;
+
+    int sequenceNumber = _nextSequenceNumber();
+    newItem = new FixedWingLandingComplexItem(_controllerVehicle, _visualItems);
+
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setLandingCoordinate(touchdownCoordinate);
+    newItem->setLoiterCoordinate(loiterCoordinate);
+
+    _initVisualItem(newItem);
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
 void MissionController::removeMissionItem(int index)
 {
     if (index <= 0 || index >= _visualItems->count()) {

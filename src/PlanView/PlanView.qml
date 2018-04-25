@@ -70,7 +70,7 @@ QGCView {
         coordinate.latitude = coordinate.latitude.toFixed(_decimalPlaces)
         coordinate.longitude = coordinate.longitude.toFixed(_decimalPlaces)
         coordinate.altitude = coordinate.altitude.toFixed(_decimalPlaces)
-        insertComplexMissionItem(complexItemName, coordinate, _missionController.visualItems.count)
+        plexMissionItem(complexItemName, coordinate, _missionController.visualItems.count)
     }
 
     function insertComplexMissionItem(complexItemName, coordinate, index) {
@@ -900,6 +900,8 @@ QGCView {
                                 itemCount++
                             }
                         }
+                        // insert landing sequence
+
                     }
                 }
             }
