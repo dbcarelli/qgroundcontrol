@@ -2,12 +2,15 @@
 #define LANDINGSEQUENCE_H
 
 #include <QObject>
+#include <QGeoCoordinate>
 
 class LandingSequence : public QObject
 {
 Q_OBJECT
 public:
-    LandingSequence();
+    LandingSequence(){};
+    LandingSequence(const LandingSequence& other);
+    LandingSequence& operator =(const LandingSequence& other);
 
     QGeoCoordinate getLoiter() const { return loiter; }
     QGeoCoordinate getTouchdown() const { return touchdown; }
@@ -18,6 +21,7 @@ public:
     void setTouchdown(const QGeoCoordinate newTouchdown) { touchdown = newTouchdown; }
     void setActive(const bool newActive) { active = newActive; }
     void insertWaypoint(const QGeoCoordinate newWaypoint) { waypoints.append(newWaypoint); }
+
 
 private:
     QGeoCoordinate loiter;

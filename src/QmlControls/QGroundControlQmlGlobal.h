@@ -147,7 +147,7 @@ public:
     SettingsManager*        settingsManager     ()  { return _settingsManager; }
     FactGroup*              gpsRtkFactGroup     ()  { return &_gpsRtkFactGroup; }
     DataStationManager*     dataStationManager  ()  { return _dataStationManager; }
-    LandingSequenceManager*     LandingSequenceManager  ()  { return _landingSequenceManager; }
+    LandingSequenceManager*     landingSequenceManager  ()  { return _landingSequenceManager; }
     static QGeoCoordinate   flightMapPosition   ()  { return _coord; }
     static double           flightMapZoom       ()  { return _zoom; }
 
