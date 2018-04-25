@@ -22,7 +22,7 @@ AnalyzePage {
     id:                 dataStationPage
     pageComponent:      pageComponent
     pageName:           qsTr("Data Station Page")
-    pageDescription:    qsTr("Temp Description")
+    pageDescription:    qsTr("Use this page to manage data stations and select them for missions")
 
     property real _margin:          ScreenTools.defaultFontPixelWidth
     property real _butttonWidth:    ScreenTools.defaultFontPixelWidth * 10
@@ -37,7 +37,42 @@ AnalyzePage {
             height: availableHeight
 
             Connections {
-                target: QGroundControl.dataStationManager.dataStations
+                target: QGroundControl.dataStationManager//.dataStations
+                onTestPassed : testPassedDialog.open()
+                onTestFailed : testFailedDialog.open()
+            }
+
+            Dialog {
+                id: testPassedDialog
+                visible: false
+                standardButtons: StandardButton.Ok
+                onAccepted: testPassedDialog.close()
+                ColumnLayout {
+                    id: columnTP
+                    width: parent ? parent.width : 100
+                    Label {
+                        text: "Test Passed"
+                        Layout.columnSpan: 2
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                    }
+                }
+            }
+            Dialog {
+                id: testFailedDialog
+                visible: false
+                standardButtons: StandardButton.Ok
+                onAccepted: testFailedDialog.close()
+                ColumnLayout {
+                    id: columnTF
+                    width: parent ? parent.width : 100
+                    Label {
+                        text: "Test Failed"
+                        Layout.columnSpan: 2
+                        Layout.fillWidth: true
+                        wrapMode: Text.WordWrap
+                    }
+                }
             }
 
             TableView {
@@ -118,18 +153,17 @@ AnalyzePage {
 
                     onClicked: {
                         deployDialog.open()
-                        QGroundControl.dataStationManager.deployDS(answerDep.value)
                     }
                     Dialog {
                         id: deployDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-
+                        onAccepted: QGroundControl.dataStationManager.deployDS(answerDep.value, testStatus.checked)
                         ColumnLayout {
                             id: columnDep
                             width: parent ? parent.width : 100
                             Label {
-                                text: "<b>What</b> is the average airspeed velocity of an unladen European swallow?"
+                                text: "Enter the ID of the Data Station to be deployed."
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap
@@ -143,6 +177,11 @@ AnalyzePage {
                                 SpinBox {
                                     id: answerDep
                                     onEditingFinished: deployDialog.click(StandardButton.Ok)
+                                }
+                                CheckBox {
+                                    id: testStatus
+                                    text: "Is this a test?"
+                                    checked: false
                                 }
                             }
                         }
@@ -204,7 +243,7 @@ AnalyzePage {
                             id: columnDel
                             width: parent ? parent.width : 100
                             Label {
-                                text: "Are you sure you want to delete Data Station "+QGroundControl.dataStationManager.dataStations[styleData.row].id+"?"
+                                text: "Are you sure you want to delete Data Station "+QGroundControl.dataStationManager.dataStations[tableView.currentRow].id+"?"
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap

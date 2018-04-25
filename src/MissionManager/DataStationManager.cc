@@ -48,12 +48,23 @@ QString DataStationManager::initializeDS(QString newId){
 //    return newId;
 }
 
-void DataStationManager::deployDS(QString targetId){
+void DataStationManager::deployDS(QString targetId, bool testStatus){
     if (!_dsLink){
         qDebug() << "not connected!";
         return;
     }
+
     QString coords = _dsLink->deployDataStation(targetId);
+
+    if(testStatus){
+        if(coords=="245233230,544344570"){
+        emit testPassed();
+            return;
+        }
+        emit testFailed();
+        qInfo() << coords;
+        return;
+    }
 
     int index = -1;
     for (int i = 0; i < dataStations.size(); i++){
