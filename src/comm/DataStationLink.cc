@@ -81,5 +81,4 @@ QString DataStationLink::deployDataStation(QString targetId){
         return retVal;
       }
     }
-
 }

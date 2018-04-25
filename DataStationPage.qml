@@ -142,11 +142,20 @@ AnalyzePage {
                 }
                 QGCButton {
                     enabled:    true
-                    text:       qsTr("Add Data Station")
+                    text:       qsTr("Initialize DS")
                     width:      _butttonWidth
 
                     onClicked: {
                          QGroundControl.dataStationManager.initializeDS()
+                    }
+                }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Deploy DS")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                         QGroundControl.dataStationManager.deployDS()
                     }
                 }
             } // Column - Buttons

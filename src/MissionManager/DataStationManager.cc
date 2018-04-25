@@ -7,8 +7,8 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     qmlRegisterUncreatableType<DataStationManager> ("QGroundControl", 1, 0, "DataStationManager", "Reference only");
     qmlRegisterType<DataStation>("QGroundControl", 1, 0, "DataStation");
 
-    loadFromFile();
-    saveToFile();
+    loadFromFile("/QGroundControl/datastations.json");
+    saveToFile("/QGroundControl/datastations.json");
 }
 
 DataStationManager::~DataStationManager(){
@@ -17,7 +17,7 @@ DataStationManager::~DataStationManager(){
 
 void DataStationManager::connect(QString portname){
     _dsLink = new DataStationLink(portname);
-    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
+    //qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS();
 }
 
 QString DataStationManager::initializeDS(){
@@ -65,9 +65,10 @@ void DataStationManager::deployDS(QString targetId){
 
 }
 
-void DataStationManager::loadFromFile(){
+void DataStationManager::loadFromFile(QString path){
     QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    loc += "/QGroundControl/datastations.json";
+    //loc += "/QGroundControl/datastations.json";
+    loc+= path;
 
     QFile *saveFile = new QFile(loc);
     if (!saveFile->exists()){
@@ -95,9 +96,10 @@ void DataStationManager::loadFromFile(){
 
 }
 
-void DataStationManager::saveToFile(){
+void DataStationManager::saveToFile(QString path){
     QString loc = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    loc += "/QGroundControl/datastations.json";
+    //loc += "/QGroundControl/datastations.json";
+    loc+= path;
 
     QFile *saveFile = new QFile(loc);
 
