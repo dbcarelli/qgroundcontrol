@@ -41,6 +41,7 @@ private:
 
 };
 
+Q_DECLARE_METATYPE(DataStation)
 #endif // DATASTATION_H
 
 
