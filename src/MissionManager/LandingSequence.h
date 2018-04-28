@@ -17,10 +17,10 @@ public:
     QList<QGeoCoordinate> getWaypoints() const { return waypoints; }
     bool getActive() const { return active; }
 
-    void setLoiter(const QGeoCoordinate newLoiter) { loiter = newLoiter; }
-    void setTouchdown(const QGeoCoordinate newTouchdown) { touchdown = newTouchdown; }
-    void setActive(const bool newActive) { active = newActive; }
-    void insertWaypoint(const QGeoCoordinate newWaypoint) { waypoints.append(newWaypoint); }
+    void setLoiter(QGeoCoordinate newLoiter) { loiter = newLoiter; }
+    void setTouchdown(QGeoCoordinate newTouchdown) { touchdown = newTouchdown; }
+    void setActive(bool newActive) { active = newActive; }
+    void insertWaypoint(QGeoCoordinate newWaypoint) { waypoints.append(newWaypoint); }
 
 
 private:

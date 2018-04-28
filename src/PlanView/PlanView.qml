@@ -262,6 +262,14 @@ QGCView {
         _addROIOnClick = false
         toolStrip.uncheckAll()
     }
+    /// Inserts a new Fixed Wing Landing mission item
+    ///     @param touchdown Location to land
+    ///     @param start Location to loiter and start approach
+    ///     @param index Insert item at this index
+    function insertLandingApproach(touchdown, start, index) {
+        var sequenceNumber = _missionController.insertLandingApproach(touchdown, start, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
+    }
 
     property int _moveDialogMissionItemIndex
 
@@ -900,7 +908,25 @@ QGCView {
                                 itemCount++
                             }
                         }
-                        // insert landing sequence
+                        var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
+                        var index = _missionController.visualItems.count
+                        // search through the landing sequences to find the active one
+                        for (var i = 0; i < numOfLandingSequences; i++){
+                            if (QGroundControl.landingSequenceManager.landingSequences[i].active) {
+                                // insert DO_LAND_START_COMMAND
+
+                                // insert corridor waypoints
+                                var numOfWaypoints = QGroundControl.landingSequenceManager.landingSequence[i].waypoints.length
+                                for (var j = 0; i < numOfWaypoints; j++){
+                                    insertSimpleMissionItem(QGroundControl.landingSequenceManager.landingSequence[i].waypoints[j], index+j+1)
+                                }
+
+                                // insert final approach
+                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequence[i].touchdown
+                                var loiterLocation = QGroundControl.landingSequenceManager.landingSequence[i].loiter
+                                insertLandingApproach(touchdownLocation, loiterLocation, index+numOfWaypoints)
+                            }
+                        }
 
                     }
                 }

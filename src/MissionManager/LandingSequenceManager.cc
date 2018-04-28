@@ -88,6 +88,11 @@ void LandingSequenceManager::loadFromFile()
         landingSequences.append(*newLandingSequence);
         delete newLandingSequence;
     }
+
+    // activate one landing sequence at least
+    if (landingSequences.size() > 0){
+        landingSequences.at(0).setActive(true);
+    }
     emit landingSequencesChanged();
 }
 
