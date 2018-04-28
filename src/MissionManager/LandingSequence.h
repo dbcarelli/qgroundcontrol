@@ -8,14 +8,14 @@ class LandingSequence : public QObject
 {
 Q_OBJECT
 public:
-    LandingSequence(){};
+    LandingSequence(){}
     LandingSequence(const LandingSequence& other);
     LandingSequence& operator =(const LandingSequence& other);
 
     QGeoCoordinate getLoiter() const { return loiter; }
     QGeoCoordinate getTouchdown() const { return touchdown; }
     QList<QGeoCoordinate> getWaypoints() const { return waypoints; }
-    bool getActive() const;
+    bool getActive() const { return active; }
 
     void setLoiter(const QGeoCoordinate newLoiter) { loiter = newLoiter; }
     void setTouchdown(const QGeoCoordinate newTouchdown) { touchdown = newTouchdown; }

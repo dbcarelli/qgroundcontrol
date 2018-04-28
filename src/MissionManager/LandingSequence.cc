@@ -13,3 +13,4 @@ LandingSequence& LandingSequence::operator =(const LandingSequence& other)
     this->touchdown = other.getTouchdown();
     this->waypoints = other.getWaypoints();
 }
+

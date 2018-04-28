@@ -6,6 +6,10 @@ LandingSequenceManager::LandingSequenceManager(QGCApplication *app, QGCToolbox *
     qmlRegisterUncreatableType<LandingSequenceManager> ("QGroundControl", 1, 0, "LandingSequenceManager", "Reference only");
 }
 
+void LandingSequenceManager::toggleActive(int index){
+    landingSequences[index].setActive(!(landingSequences.at(index).getActive()));
+}
+
 QVariantList LandingSequenceManager::getLandingSequences() const
 {
     QVariantList varLandingSeqs = QVariantList();
