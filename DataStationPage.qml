@@ -98,7 +98,14 @@ AnalyzePage {
                         }
                     }
                 }
-
+                TableViewColumn {
+                    title: qsTr("Latitude")
+                    width: ScreenTools.defaultFontPixelWidth * 18
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
+                    }
+                }
                 TableViewColumn {
                     title: qsTr("Longitude")
                     width: ScreenTools.defaultFontPixelWidth * 18
@@ -112,14 +119,7 @@ AnalyzePage {
                     }
                 }
 
-                TableViewColumn {
-                    title: qsTr("Latitude")
-                    width: ScreenTools.defaultFontPixelWidth * 18
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
-                    }
-                }
+
                 TableViewColumn {
                     title: qsTr("Active")
                     width: ScreenTools.defaultFontPixelWidth * 6
@@ -224,7 +224,7 @@ AnalyzePage {
                     }
                 }
                 QGCButton {
-                    enabled:    true
+                    enabled:    tableView.currentRow>=0
                     text:       qsTr("Delete DS")
                     width:      _butttonWidth
 
