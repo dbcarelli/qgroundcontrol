@@ -39,7 +39,9 @@ public:
 
     void loadFromFile();
 
-    void saveToFile();
+    Q_INVOKABLE void saveToFile();
+
+    void insertLandingSequence(LandingSequence& landingSequence);
 
 private:
     QList<LandingSequence> landingSequences;
