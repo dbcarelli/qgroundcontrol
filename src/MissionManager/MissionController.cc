@@ -497,13 +497,42 @@ int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate,
 
 int MissionController::insertLandingStart(QGeoCoordinate coordinate, int i)
 {
-    qWarning() << "MissionController::insertSimpleMissionItem called!\n";
+    qWarning() << "MissionController::insertLandingStart called!\n";
 
     int sequenceNumber = _nextSequenceNumber();
     SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
     newItem->setSequenceNumber(sequenceNumber);
     newItem->setCoordinate(coordinate);
     newItem->setCommand(MAV_CMD_DO_LAND_START);
+    _initVisualItem(newItem);
+    newItem->setDefaultsForCommand();
+    if (newItem->specifiesAltitude()) {
+        double  prevAltitude;
+        int     prevAltitudeMode;
+
+        if (_findPreviousAltitude(i, &prevAltitude, &prevAltitudeMode)) {
+            newItem->altitude()->setRawValue(prevAltitude);
+            newItem->setAltitudeMode((SimpleMissionItem::AltitudeMode)prevAltitudeMode);
+        }
+    }
+    newItem->setMissionFlightStatus(_missionFlightStatus);
+
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
+int MissionController::insertTakeOff(QGeoCoordinate coordinate, int i){
+    qWarning() << "MissionController::insertTakeOff called!\n";
+
+    int sequenceNumber = _nextSequenceNumber();
+    SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setCoordinate(coordinate);
+    newItem->setCommand(MAV_CMD_NAV_TAKEOFF);
     _initVisualItem(newItem);
     newItem->setDefaultsForCommand();
     if (newItem->specifiesAltitude()) {

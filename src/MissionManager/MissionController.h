@@ -129,10 +129,15 @@ public:
     ///     @param sequenceNumber - index for new item, -1 to clear current item
     Q_INVOKABLE void setCurrentPlanViewIndex(int sequenceNumber, bool force);
 
-    /// Add a new simple mission item to the list
+    /// Add a new DO_LAND_START item to the list
     ///     @param i: index to insert at
     /// @return Sequence number for new item
     Q_INVOKABLE int insertLandingStart(QGeoCoordinate coordinate, int i);
+
+    /// Add a takeoff item to the list
+    ///     @param i: index to insert at
+    /// @return Sequence number for new item
+    Q_INVOKABLE int insertTakeOff(QGeoCoordinate coordinate, int i);
 
     /// Determines if the mission has all data needed to be saved or sent to the vehicle. Currently the only case where this
     /// would return false is when it is still waiting on terrain data to determine correct altitudes.
