@@ -394,7 +394,9 @@ HEADERS += \
     src/api/QmlComponentInfo.h \
     src/comm/DataStationLink.h \
     src/MissionManager/DataStation.h \
-    src/MissionManager/DataStationManager.h
+    src/MissionManager/DataStationManager.h \
+    src/MissionManager/LandingSequenceManager.h \
+    src/MissionManager/LandingSequence.h
 
 SOURCES += \
     src/api/QGCCorePlugin.cc \
@@ -403,7 +405,9 @@ SOURCES += \
     src/api/QmlComponentInfo.cc \
     src/comm/DataStationLink.cc \
     src/MissionManager/DataStation.cc \
-    src/MissionManager/DataStationManager.cc
+    src/MissionManager/DataStationManager.cc \
+    src/MissionManager/LandingSequenceManager.cc \
+    src/MissionManager/LandingSequence.cc
 
 #
 # Unit Test specific configuration goes here (requires full debug build with all plugins)

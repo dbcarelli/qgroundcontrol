@@ -13,8 +13,6 @@
 #include "DataStationLink.h"
 #include "DataStation.h"
 
-Q_DECLARE_METATYPE(DataStation)
-
 class DataStationManager : public QGCTool
 {
 Q_OBJECT

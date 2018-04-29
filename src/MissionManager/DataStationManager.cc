@@ -29,23 +29,6 @@ QString DataStationManager::initializeDS(QString newId){
     dataStations.append(newStation);
     emit dataStationsChanged();
     return newId;
-//    QString newId;
-//    int max = 1;
-//    for (QList<DataStation*>::iterator i = dataStations.begin(); i != dataStations.end(); i++){
-//        int id = (*i)->getId().toInt();
-//        if (id > max) max = id;
-//    }
-//    newId = QString("%1").arg(max + 1, 2, 10, QChar('0'));
-//    _dsLink->setDataStationId(newId);
-
-//    DataStation *newStation = new DataStation();
-//    newStation->setId(newId);
-
-//    dataStations.append(newStation);
-
-//    emit dataStationsChanged();
-
-//    return newId;
 }
 
 void DataStationManager::deployDS(QString targetId, bool testStatus){
@@ -111,8 +94,9 @@ void DataStationManager::loadFromFile(QString path){
 
         DataStation *newStation = new DataStation();
         newStation->setId(jsonObj.value("id").toString());
-        newStation->setLat(jsonObj.value("lon").toDouble());
-        newStation->setLon(jsonObj.value("lat").toDouble());
+        newStation->setLat(jsonObj.value("lat").toDouble());
+        newStation->setLon(jsonObj.value("lon").toDouble());
+        newStation->setActive(jsonObj.value("active").toBool());
 
         dataStations.append(newStation);
     }
@@ -134,6 +118,7 @@ void DataStationManager::saveToFile(QString path){
         jsonObj.insert("id", (*i)->getId());
         jsonObj.insert("lat", (*i)->getLat());
         jsonObj.insert("lon", (*i)->getLon());
+        jsonObj.insert("active", (*i)->getActive());
 
         jsonArr.append(jsonObj);
     }
