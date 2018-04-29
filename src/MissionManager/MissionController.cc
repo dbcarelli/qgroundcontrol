@@ -475,7 +475,7 @@ int MissionController::insertComplexMissionItem(QString itemName, QGeoCoordinate
     return newItem->sequenceNumber();
 }
 
-int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i)
+int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, bool loiterDirection, int i)
 {
     FixedWingLandingComplexItem* newItem;
 
@@ -485,8 +485,38 @@ int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate,
     newItem->setSequenceNumber(sequenceNumber);
     newItem->setLandingCoordinate(touchdownCoordinate);
     newItem->setLoiterCoordinate(loiterCoordinate);
-
+    newItem->setProperty("loiterClockwise", loiterDirection);
     _initVisualItem(newItem);
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
+int MissionController::insertLandingStart(QGeoCoordinate coordinate, int i)
+{
+    qWarning() << "MissionController::insertSimpleMissionItem called!\n";
+
+    int sequenceNumber = _nextSequenceNumber();
+    SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setCoordinate(coordinate);
+    newItem->setCommand(MAV_CMD_DO_LAND_START);
+    _initVisualItem(newItem);
+    newItem->setDefaultsForCommand();
+    if (newItem->specifiesAltitude()) {
+        double  prevAltitude;
+        int     prevAltitudeMode;
+
+        if (_findPreviousAltitude(i, &prevAltitude, &prevAltitudeMode)) {
+            newItem->altitude()->setRawValue(prevAltitude);
+            newItem->setAltitudeMode((SimpleMissionItem::AltitudeMode)prevAltitudeMode);
+        }
+    }
+    newItem->setMissionFlightStatus(_missionFlightStatus);
+
 
     _visualItems->insert(i, newItem);
 

@@ -118,7 +118,7 @@ public:
     ///     @param loiterCoordinate: coordinate for loiter to achieve desired altitude for landing approach
     ///     @param i: index to insert at
     /// @return Sequence number for new item
-    Q_INVOKABLE int insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i);
+    Q_INVOKABLE int insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, bool loiterDirection, int i);
 
     Q_INVOKABLE void resumeMission(int resumeIndex);
 
@@ -128,6 +128,11 @@ public:
     /// Sets a new current mission item (PlanView).
     ///     @param sequenceNumber - index for new item, -1 to clear current item
     Q_INVOKABLE void setCurrentPlanViewIndex(int sequenceNumber, bool force);
+
+    /// Add a new simple mission item to the list
+    ///     @param i: index to insert at
+    /// @return Sequence number for new item
+    Q_INVOKABLE int insertLandingStart(QGeoCoordinate coordinate, int i);
 
     /// Determines if the mission has all data needed to be saved or sent to the vehicle. Currently the only case where this
     /// would return false is when it is still waiting on terrain data to determine correct altitudes.
