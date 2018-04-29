@@ -114,7 +114,7 @@ public:
     /// @return Sequence number for new item
     Q_INVOKABLE int insertComplexMissionItem(QString itemName, QGeoCoordinate mapCenterCoordinate, int i);
 
-    Q_INVOKABLE void exportToLandingSequenceManager(void) const;
+    Q_INVOKABLE void exportToLandingSequenceManager(QString description) const;
 
     /// Add a landing approach, fixed wing landing
     ///     @param touchdownCoordinate: desired touchdown point for airplane

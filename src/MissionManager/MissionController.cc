@@ -615,7 +615,7 @@ void MissionController::removeAll(void)
     }
 }
 
-void MissionController::exportToLandingSequenceManager(void) const{
+void MissionController::exportToLandingSequenceManager(QString description) const{
     // identify loiter, touchdown, and waypoints
     QGeoCoordinate loiter;
     QGeoCoordinate touchdown;
@@ -646,6 +646,8 @@ void MissionController::exportToLandingSequenceManager(void) const{
     LandingSequence landingSequence = LandingSequence();
     landingSequence.setLoiter(loiter);
     landingSequence.setTouchdown(touchdown);
+    landingSequence.setDescription(description);
+    landingSequence.setActive(false);
 
     for (int i = 0; i < waypoints.size(); i++)
         landingSequence.insertWaypoint(waypoints.at(i));

@@ -892,13 +892,12 @@ QGCView {
                     enabled:            !masterController.syncInProgress
                     onClicked: {
                         descripDialog.open()
-                        _missionController.exportToLandingSequenceManager();
                     }
                     Dialog {
                         id: descripDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: {}
+                        onAccepted: _missionController.exportToLandingSequenceManager(descriptionAnswer.text);
                         ColumnLayout {
                             id: columnDescrip
                             width: parent ? parent.width : 100

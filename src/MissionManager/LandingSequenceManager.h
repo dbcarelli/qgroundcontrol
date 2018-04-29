@@ -29,7 +29,7 @@ Q_PROPERTY(QVariantList landingSequences READ getLandingSequences NOTIFY landing
 public:
 
     LandingSequenceManager(QGCApplication *app, QGCToolbox *toolbox);
-    ~LandingSequenceManager(){};
+    ~LandingSequenceManager(){}
 
     QVariantList getLandingSequences() const;
 
