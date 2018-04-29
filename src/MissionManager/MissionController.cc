@@ -476,6 +476,26 @@ int MissionController::insertComplexMissionItem(QString itemName, QGeoCoordinate
     return newItem->sequenceNumber();
 }
 
+int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i)
+{
+    FixedWingLandingComplexItem* newItem;
+
+    int sequenceNumber = _nextSequenceNumber();
+    newItem = new FixedWingLandingComplexItem(_controllerVehicle, _visualItems);
+
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setLandingCoordinate(touchdownCoordinate);
+    newItem->setLoiterCoordinate(loiterCoordinate);
+
+    _initVisualItem(newItem);
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
 void MissionController::removeMissionItem(int index)
 {
     if (index <= 0 || index >= _visualItems->count()) {
@@ -541,26 +561,32 @@ void MissionController::exportToLandingSequenceManager(void) const{
     QGeoCoordinate loiter;
     QGeoCoordinate touchdown;
     QList<QGeoCoordinate> waypoints;
+
     for (int i=0; i < _visualItems->count(); i++) {
         VisualMissionItem* visualItem = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
-        if (!landingMissionItem->isSimpleItem()) continue;
-        SimpleMissionItem* simpleItem = (SimpleMissionItem*)visualItem;
-        switch (simpleItem->command()){
-        case MAV_CMD_NAV_LOITER_TO_ALT:
-            loiter = simpleItem->coordinate();
-            break;
-        case MAV_CMD_NAV_LAND:
-            touchdown = simpleItem->coordinate();
-            break;
-        case MAV_CMD_NAV_WAYPOINT:
-            waypoints.append(simpleItem->coordinate());
-            break;
-        default:
-            qDebug() << "Mission item " << simpleItem->sequenceNumber() << " is not part of landing sequence";
-            break;
+        if (!visualItem->isSimpleItem()){
+            FixedWingLandingComplexItem *landingApproach = dynamic_cast<FixedWingLandingComplexItem*>(visualItem);
+            if (landingApproach){
+                loiter = landingApproach->loiterCoordinate();
+                touchdown = landingApproach->landingCoordinate();
+            }else{
+                qDebug << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
+            }
+        }else{
+            SimpleMissionItem *waypoint = (SimpleMissionItem*)visualItem;
+            if (waypoint->command() == MAV_CMD_NAV_WAYPOINT)
+                waypoints.append(waypoint->coordinate());
+            else
+                qDebug() << "MissionController::exportToLandingSequenceManager - unidentified SimpleMissionItem " << waypoint->sequenceNumber();
         }
     }
 
+    LandingSequence landingSequence = LandingSequence();
+    landingSequence.setLoiter(loiter);
+    landingSequence.setTouchdown(touchdown);
+
+    for (int i = 0; i < waypoints.size(); i++)
+        landingSequence.insertWaypoint(waypoints.at(i));
 
 }
 

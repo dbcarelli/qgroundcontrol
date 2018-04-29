@@ -70,7 +70,7 @@ QGCView {
         coordinate.latitude = coordinate.latitude.toFixed(_decimalPlaces)
         coordinate.longitude = coordinate.longitude.toFixed(_decimalPlaces)
         coordinate.altitude = coordinate.altitude.toFixed(_decimalPlaces)
-        insertComplexMissionItem(complexItemName, coordinate, _missionController.visualItems.count)
+        plexMissionItem(complexItemName, coordinate, _missionController.visualItems.count)
     }
 
     function insertComplexMissionItem(complexItemName, coordinate, index) {
@@ -261,6 +261,14 @@ QGCView {
         _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
         _addROIOnClick = false
         toolStrip.uncheckAll()
+    }
+    /// Inserts a new Fixed Wing Landing mission item
+    ///     @param touchdown Location to land
+    ///     @param start Location to loiter and start approach
+    ///     @param index Insert item at this index
+    function insertLandingApproach(touchdown, start, index) {
+        var sequenceNumber = _missionController.insertLandingApproach(touchdown, start, index)
+        _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
     }
 
     property int _moveDialogMissionItemIndex
@@ -879,10 +887,41 @@ QGCView {
                     }
                 }
                 QGCButton {
+                    text:               qsTr("Save Landing Sequence")
+                    Layout.fillWidth:   true
+                    enabled:            !masterController.syncInProgress
+                    onClicked: {
+                        descripDialog.open()
+                    }
+                    Dialog {
+                        id: descripDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {}
+                        ColumnLayout {
+                            id: columnDescrip
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Enter the description for the new landing pattern."
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                            RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                TextField {
+                                    id: descriptionAnswer
+                                }
+                            }
+                        }
+                    }
+                }
+                QGCButton {
                     text:               qsTr("Auto-Gen Mission")
                     Layout.fillWidth:   true
                     enabled:            !masterController.syncInProgress
                     onClicked: {
+                        //console.info("Auto-Gen Mission!")
                         var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
                         var itemCount = 0
@@ -900,6 +939,31 @@ QGCView {
                                 itemCount++
                             }
                         }
+                        var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
+                        //console.info("Number of landing sequences")
+                        //console.info(numOfLandingSequences)
+                        index = _missionController.visualItems.count
+                        // search through the landing sequences to find the active one
+                        for (var j = 0; j < numOfLandingSequences; j++){
+                            //console.info("wtf")
+                            //console.info(QGroundControl.landingSequenceManager.landingSequences[j].active)
+                            if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
+                                console.info("Landing sequence!")
+                                // insert DO_LAND_START_COMMAND
+
+                                // insert corridor waypoints
+                                var numOfWaypoints = QGroundControl.landingSequenceManager.landingSequences[j].waypoints.length
+                                for (var k = 0; k < numOfWaypoints; k++){
+                                    insertSimpleMissionItem(QGroundControl.landingSequenceManager.landingSequences[j].waypoints[k], index+k+1)
+                                }
+
+                                // insert final approach
+                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequences[j].touchdown
+                                var loiterLocation = QGroundControl.landingSequenceManager.landingSequences[j].loiter
+                                insertLandingApproach(touchdownLocation, loiterLocation, index+numOfWaypoints)
+                            }
+                        }
+
                     }
                 }
             }

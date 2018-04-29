@@ -27,6 +27,7 @@
 #endif /* __mobile__ */
 #include "GPSRTKFactGroup.h"
 #include "DataStationManager.h"
+#include "LandingSequenceManager.h"
 
 #ifdef QT_DEBUG
 #include "MockLink.h"
@@ -55,6 +56,7 @@ public:
     Q_PROPERTY(SettingsManager*     settingsManager     READ settingsManager        CONSTANT)
     Q_PROPERTY(FactGroup*           gpsRtk              READ gpsRtkFactGroup        CONSTANT)
     Q_PROPERTY(DataStationManager*  dataStationManager   READ dataStationManager    CONSTANT)
+    Q_PROPERTY(LandingSequenceManager*  landingSequenceManager   READ landingSequenceManager    CONSTANT)
 
     Q_PROPERTY(int      supportedFirmwareCount          READ supportedFirmwareCount CONSTANT)
 
@@ -145,6 +147,7 @@ public:
     SettingsManager*        settingsManager     ()  { return _settingsManager; }
     FactGroup*              gpsRtkFactGroup     ()  { return &_gpsRtkFactGroup; }
     DataStationManager*     dataStationManager  ()  { return _dataStationManager; }
+    LandingSequenceManager*     landingSequenceManager  ()  { return _landingSequenceManager; }
     static QGeoCoordinate   flightMapPosition   ()  { return _coord; }
     static double           flightMapZoom       ()  { return _zoom; }
 
@@ -206,6 +209,7 @@ private:
     SettingsManager*        _settingsManager;
     GPSRTKFactGroup         _gpsRtkFactGroup;
     DataStationManager *    _dataStationManager;
+    LandingSequenceManager * _landingSequenceManager;
 
     bool                    _skipSetupPage;
 

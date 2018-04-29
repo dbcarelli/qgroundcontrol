@@ -118,6 +118,11 @@ Rectangle {
                         buttonText:         qsTr("Data Station Control")
                         pageSource:         "DataStationPage.qml"
                     }
+                    ListElement {
+                        buttonImage:        "/qmlimages/GeoTagIcon"
+                        buttonText:         qsTr("Landing Sequence Control")
+                        pageSource:         "LandingSequencePage.qml"
+                    }
                 }
 
                 Component.onCompleted: itemAt(0).checked = true

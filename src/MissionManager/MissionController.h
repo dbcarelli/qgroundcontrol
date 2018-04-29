@@ -116,6 +116,13 @@ public:
 
     Q_INVOKABLE void exportToLandingSequenceManager(void) const;
 
+    /// Add a landing approach, fixed wing landing
+    ///     @param touchdownCoordinate: desired touchdown point for airplane
+    ///     @param loiterCoordinate: coordinate for loiter to achieve desired altitude for landing approach
+    ///     @param i: index to insert at
+    /// @return Sequence number for new item
+    Q_INVOKABLE int insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i);
+
     Q_INVOKABLE void resumeMission(int resumeIndex);
 
     /// Updates the altitudes of the items in the current mission to the new default altitude
