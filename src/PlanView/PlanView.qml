@@ -892,6 +892,7 @@ QGCView {
                     enabled:            !masterController.syncInProgress
                     onClicked: {
                         descripDialog.open()
+                        _missionController.exportToLandingSequenceManager();
                     }
                     Dialog {
                         id: descripDialog

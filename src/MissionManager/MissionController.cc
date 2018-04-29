@@ -628,15 +628,18 @@ void MissionController::exportToLandingSequenceManager(void) const{
             if (landingApproach){
                 loiter = landingApproach->loiterCoordinate();
                 touchdown = landingApproach->landingCoordinate();
+                qDebug() << "MissionController::exportToLandingSequenceManager - adding item " << visualItem->sequenceNumber();
             }else{
                 qDebug() << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
             }
         }else{
             SimpleMissionItem *waypoint = (SimpleMissionItem*)visualItem;
-            if (waypoint->command() == MAV_CMD_NAV_WAYPOINT)
+            if (waypoint->command() == MAV_CMD_NAV_WAYPOINT){
                 waypoints.append(waypoint->coordinate());
-            else
+                qDebug() << "MissionController::exportToLandingSequenceManager - adding waypoint " << waypoint->sequenceNumber();
+            }else{
                 qDebug() << "MissionController::exportToLandingSequenceManager - unidentified SimpleMissionItem " << waypoint->sequenceNumber();
+            }
         }
     }
 
@@ -647,6 +650,7 @@ void MissionController::exportToLandingSequenceManager(void) const{
     for (int i = 0; i < waypoints.size(); i++)
         landingSequence.insertWaypoint(waypoints.at(i));
 
+    qgcApp()->toolbox()->landingSequenceManager()->insertLandingSequence(landingSequence);
 }
 
 bool MissionController::_loadJsonMissionFileV1(const QJsonObject& json, QmlObjectListModel* visualItems, QString& errorString)

@@ -37,6 +37,10 @@ QVariantList LandingSequenceManager::getLandingSequences() const
     return varLandingSeqs;
 }
 
+void LandingSequenceManager::insertLandingSequence(LandingSequence& landingSequence){
+    landingSequences.append(landingSequence);
+}
+
 void LandingSequenceManager::loadFromFile()
 {
     // For whovever is going to look throught this... json fucking sucks and is the most ridiculous
@@ -133,7 +137,7 @@ void LandingSequenceManager::saveToFile()
          i != landingSequences.end(); i++){
         // create new landing sequence json object
         QJsonObject jsonLandingSequenceObject;
-
+        qInfo() << "Creating loiter jsonObject";
         // create a loiter json object and add it to the landing sequence
         QJsonObject jsonLoiterObject;
         jsonLoiterObject.insert("lat", i->getLoiter().latitude());
