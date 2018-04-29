@@ -365,6 +365,7 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
 
     return newItem->sequenceNumber();
 }
+
 int MissionController::insertDataStationItem(QGeoCoordinate coordinate, int i)
 {
     qWarning() << "MissionController::insertDataStationItem called!\n";
@@ -612,6 +613,40 @@ void MissionController::removeAll(void)
         setDirty(true);
         _resetMissionFlightStatus();
     }
+}
+
+void MissionController::exportToLandingSequenceManager(void) const{
+    // identify loiter, touchdown, and waypoints
+    QGeoCoordinate loiter;
+    QGeoCoordinate touchdown;
+    QList<QGeoCoordinate> waypoints;
+
+    for (int i=0; i < _visualItems->count(); i++) {
+        VisualMissionItem* visualItem = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+        if (!visualItem->isSimpleItem()){
+            FixedWingLandingComplexItem *landingApproach = dynamic_cast<FixedWingLandingComplexItem*>(visualItem);
+            if (landingApproach){
+                loiter = landingApproach->loiterCoordinate();
+                touchdown = landingApproach->landingCoordinate();
+            }else{
+                qDebug << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
+            }
+        }else{
+            SimpleMissionItem *waypoint = (SimpleMissionItem*)visualItem;
+            if (waypoint->command() == MAV_CMD_NAV_WAYPOINT)
+                waypoints.append(waypoint->coordinate());
+            else
+                qDebug() << "MissionController::exportToLandingSequenceManager - unidentified SimpleMissionItem " << waypoint->sequenceNumber();
+        }
+    }
+
+    LandingSequence landingSequence = LandingSequence();
+    landingSequence.setLoiter(loiter);
+    landingSequence.setTouchdown(touchdown);
+
+    for (int i = 0; i < waypoints.size(); i++)
+        landingSequence.insertWaypoint(waypoints.at(i));
+
 }
 
 bool MissionController::_loadJsonMissionFileV1(const QJsonObject& json, QmlObjectListModel* visualItems, QString& errorString)
