@@ -9,6 +9,9 @@ LandingSequenceManager::LandingSequenceManager(QGCApplication *app, QGCToolbox *
 
 void LandingSequenceManager::toggleActive(int index){
     landingSequences[index].setActive(!(landingSequences.at(index).getActive()));
+    for(int i= 0; i< landingSequences.size(); i++){
+        landingSequences[i].setActive(false);
+    }
     emit landingSequencesChanged();
 }
 
@@ -21,6 +24,8 @@ QVariantList LandingSequenceManager::getLandingSequences() const
         map.insert("loiter", QVariant::fromValue(landingSequences.at(i).getLoiter()));
         map.insert("touchdown", QVariant::fromValue(landingSequences.at(i).getTouchdown()));
         map.insert("active", QVariant::fromValue(landingSequences.at(i).getActive()));
+        map.insert("id", QVariant::fromValue(landingSequences.at(i).getID()));
+        map.insert("description", QVariant::fromValue(landingSequences.at(i).getDescription()));
         QVariantList varWaypoints = QVariantList();
         for (int j = 0; j < landingSequences.at(i).getWaypoints().size(); j++){
             qInfo() << "get a waypoint";

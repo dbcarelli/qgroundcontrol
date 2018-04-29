@@ -149,6 +149,7 @@ void DataStationManager::deleteStation(int index){
     DataStation * dataStationDead = dataStations.at(index);
     delete dataStationDead;
     dataStations.removeAt(index);
+    emit dataStationsChanged();
 }
 
 
