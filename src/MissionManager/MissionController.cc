@@ -365,6 +365,7 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
 
     return newItem->sequenceNumber();
 }
+
 int MissionController::insertDataStationItem(QGeoCoordinate coordinate, int i)
 {
     qWarning() << "MissionController::insertDataStationItem called!\n";
@@ -533,6 +534,34 @@ void MissionController::removeAll(void)
         setDirty(true);
         _resetMissionFlightStatus();
     }
+}
+
+void MissionController::exportToLandingSequenceManager(void) const{
+    // identify loiter, touchdown, and waypoints
+    QGeoCoordinate loiter;
+    QGeoCoordinate touchdown;
+    QList<QGeoCoordinate> waypoints;
+    for (int i=0; i < _visualItems->count(); i++) {
+        VisualMissionItem* visualItem = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+        if (!landingMissionItem->isSimpleItem()) continue;
+        SimpleMissionItem* simpleItem = (SimpleMissionItem*)visualItem;
+        switch (simpleItem->command()){
+        case MAV_CMD_NAV_LOITER_TO_ALT:
+            loiter = simpleItem->coordinate();
+            break;
+        case MAV_CMD_NAV_LAND:
+            touchdown = simpleItem->coordinate();
+            break;
+        case MAV_CMD_NAV_WAYPOINT:
+            waypoints.append(simpleItem->coordinate());
+            break;
+        default:
+            qDebug() << "Mission item " << simpleItem->sequenceNumber() << " is not part of landing sequence";
+            break;
+        }
+    }
+
+
 }
 
 bool MissionController::_loadJsonMissionFileV1(const QJsonObject& json, QmlObjectListModel* visualItems, QString& errorString)

@@ -15,6 +15,7 @@
 #include "QmlObjectListModel.h"
 #include "Vehicle.h"
 #include "QGCLoggingCategory.h"
+#include "LandingSequence.h"
 
 #include <QHash>
 
@@ -112,6 +113,8 @@ public:
     ///     @param i: index to insert at
     /// @return Sequence number for new item
     Q_INVOKABLE int insertComplexMissionItem(QString itemName, QGeoCoordinate mapCenterCoordinate, int i);
+
+    Q_INVOKABLE void exportToLandingSequenceManager(void) const;
 
     Q_INVOKABLE void resumeMission(int resumeIndex);
 
