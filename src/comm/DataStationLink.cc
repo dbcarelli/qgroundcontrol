@@ -16,6 +16,7 @@ DataStationLink::DataStationLink(QString portname){
 
     serialPort->open(QIODevice::ReadWrite);
     serialPort->setBaudRate(QSerialPort::Baud57600);
+    clock = QTime();
 
 }
 
@@ -34,58 +35,104 @@ QString DataStationLink::_read(size_t size, int time){
 }
 
 int DataStationLink::setDataStationId(QString newId){
-    serialPort->flush();
-    // write the preamble to the data station
-    _write(preamble);
-
-    // write factory ID
-    _write("01");
-
-    // send the RESET_ID command, 4
+    flushIncomingBuffer();
     QString command = "4";
-    _write(command);
-
-    // write the prelimitor, idicating the ID is coming
+    QString targetId = "01";
+    sendCommand(targetId, command);
     _write(prelimitor);
-
-    // send the new ID
     _write(newId);
-
-    // send the postlimitor
     _write(postlimitor);
-    // wait for receipt confirmation, if recive the pos-amble--> success
-//    QTest::qSleep(10000);
-    QString confirmation = _read(3);
-    qDebug() << confirmation;
-    if (confirmation == "cat")
-        return 1;
 
-    // if we receive anything else, this operation failed
+    QString incomingBuffer = "      ";
+
+    // wait for some bytes mothafucka -DC
+    while (!(serialPort->waitForReadyRead(3000))){}
+
+    int count = 0;
+    while ((serialPort->bytesAvailable()) && (count < 100)){
+
+        qInfo() << "Checking for response to command 6";
+        // shift the buffer
+        incomingBuffer[0] = incomingBuffer[1];
+        incomingBuffer[1] = incomingBuffer[2];
+        incomingBuffer[2] = incomingBuffer[3];
+        incomingBuffer[3] = incomingBuffer[4];
+        incomingBuffer[4] = incomingBuffer[5];
+        incomingBuffer[5] = _read(1, 1000)[0];
+
+        // compare the buffer
+        if ((incomingBuffer[0] == 'c') &&
+            (incomingBuffer[1] == 'a') &&
+            (incomingBuffer[2] == 't') &&
+            (incomingBuffer[3] == targetId.at(0)) &&
+            (incomingBuffer[4] == targetId.at(1)) &&
+            (incomingBuffer[5] == command[0])){
+            qInfo() << "ackowledged";
+            return 1;
+        }
+        else {
+            count++;
+        }
+        if (count%6 == 5){
+            sendCommand(targetId, command);
+            _write("<");
+            _write(newId);
+            _write(">");
+        }
+
+    }
+
     return 0;
 }
 
 QString DataStationLink::deployDataStation(QString targetId, bool testStatus){
-    // write the preamble to the data station
-    _write(preamble);
-
-    // address the target data station
-    _write(targetId);
+    flushIncomingBuffer();
 
     // send the STATUS_REQUEST command, 5
     QString command = "5";
     if(testStatus){
         command = "6";
+        qInfo() << "Running DEPLOYMENT_SYS_TEST";
     }
-    _write(command);
-    serialPort->flush();
 
-    // check for post amble and ID confirmation
-    if (_read(1, 5000) != 'c') { return "Failed: I say street, you say cat!"; }
-    if (_read(1) != 'a') { return "Failed: I say street, you say cat!"; }
-    if (_read(1) != 't') { return "Failed: I say street, you say cat!"; }
-    if (_read(1) != targetId.at(0)) { return "Failed: ID mismatch"; }
-    if (_read(1) != targetId.at(1)) { return "Failed: ID mismatch"; }
-    if (_read(1) != command){return "Failed: command mismatch"; }
+
+    sendCommand(targetId, command);
+
+    QString incomingBuffer = "      ";
+
+    // wait for some bytes mothafucka -DC
+    while (!(serialPort->waitForReadyRead(3000))){}
+
+    int count = 0;
+    while ((serialPort->bytesAvailable()) && (count < 100)){
+
+        qInfo() << "Checking for response to command 6";
+        // shift the buffer
+        incomingBuffer[0] = incomingBuffer[1];
+        incomingBuffer[1] = incomingBuffer[2];
+        incomingBuffer[2] = incomingBuffer[3];
+        incomingBuffer[3] = incomingBuffer[4];
+        incomingBuffer[4] = incomingBuffer[5];
+        incomingBuffer[5] = _read(1, 1000)[0];
+
+        // compare the buffer
+        if ((incomingBuffer[0] == 'c') &&
+            (incomingBuffer[1] == 'a') &&
+            (incomingBuffer[2] == 't') &&
+            (incomingBuffer[3] == targetId.at(0)) &&
+            (incomingBuffer[4] == targetId.at(1)) &&
+            (incomingBuffer[5] == command[0])){
+            qInfo() << "ackowledged";
+            break;
+        }
+        else {
+            count++;
+        }
+        if (count%6 == 5){
+            sendCommand(targetId, command);
+        }
+
+    }
 
     // receive all the information in the form a QString that will be parsed
     // later. The first char should be a prelimitor.
@@ -102,5 +149,59 @@ QString DataStationLink::deployDataStation(QString targetId, bool testStatus){
       else{
         return retVal;
       }
+    }
+}
+
+void DataStationLink::sendCommand(QString targetId, QString command){
+
+    // write the preamble to the data station
+    _write(preamble);
+
+    // address the target data station
+    _write(targetId);
+
+    // send the command
+    _write(command);
+
+    serialPort->flush();
+}
+
+bool DataStationLink::turnOnDS(QString targetId){
+    flushIncomingBuffer();
+    sendCommand(targetId, "1");
+    int count = 0;
+
+    QString incomingBuffer = "     ";
+
+    while (serialPort->bytesAvailable() && count < 20){
+        // shift the buffer
+        incomingBuffer[0] = incomingBuffer[1];
+        incomingBuffer[1] = incomingBuffer[2];
+        incomingBuffer[2] = incomingBuffer[3];
+        incomingBuffer[3] = incomingBuffer[4];
+        incomingBuffer[4] = _read(1, 1000)[0];
+
+        // compare the buffer
+        if ((incomingBuffer[0] == 'c') &&
+            (incomingBuffer[1] == 'a') &&
+            (incomingBuffer[2] == 't') &&
+            (incomingBuffer[3] == targetId.at(0)) &&
+            (incomingBuffer[4] == targetId.at(1))){
+            return true;
+        }
+        else {
+            count++;
+        }
+        if (count%3 == 2){
+            sendCommand(targetId, "1");
+        }
+    }
+
+    return false;
+}
+
+void DataStationLink::flushIncomingBuffer(){
+    while(serialPort->bytesAvailable()){
+        _read(1,1);
     }
 }

@@ -6,9 +6,11 @@
 #include <QJsonDocument>
 #include <QSaveFile>
 #include <QDebug>
+#include <QTime>
 
 #include "QGCApplication.h"
 #include "QGCToolbox.h"
+#include <QStringList>
 
 #include "DataStationLink.h"
 #include "DataStation.h"
@@ -22,6 +24,8 @@ private:
 
     DataStationLink * _dsLink;
     QList<DataStation *> dataStations;
+    QTime clock;
+    const int timeOut=10;
 
 public:
 
@@ -51,6 +55,8 @@ public:
 
     // get datastation's coordinates, mark as deployed
     Q_INVOKABLE void deployDS(QString targetId, bool testStatus);
+
+    Q_INVOKABLE void turnOnDS(QString targetId);
 
     Q_INVOKABLE void toggleActive(int index);
 

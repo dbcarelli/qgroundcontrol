@@ -10,6 +10,8 @@ DataStationManager::DataStationManager(QGCApplication *app, QGCToolbox *toolbox)
     loadFromFile("/QGroundControl/datastations.json");
     saveToFile("/QGroundControl/datastations.json");
     _dsLink = nullptr;
+    clock = QTime();
+
 }
 
 DataStationManager::~DataStationManager(){
@@ -23,12 +25,31 @@ void DataStationManager::connect(QString portname){
 }
 
 QString DataStationManager::initializeDS(QString newId){
-    _dsLink->setDataStationId(newId);
-    DataStation *newStation = new DataStation();
-    newStation->setId(newId);
-    dataStations.append(newStation);
-    emit dataStationsChanged();
-    return newId;
+    if (!_dsLink){
+        qDebug() << "not connected!";
+        return "Failed";
+    }
+
+    if (_dsLink->setDataStationId(newId)){
+        DataStation *newStation = new DataStation();
+        newStation->setId(newId);
+        dataStations.append(newStation);
+        emit dataStationsChanged();
+        return newId;
+    }
+
+    return "-1";
+}
+void DataStationManager::turnOnDS(QString targetId){
+    if (!_dsLink){
+        qDebug() << "not connected!";
+        return;
+    }
+
+    if(_dsLink->turnOnDS(targetId))
+        qInfo() << "Data Station "+targetId+" turned on.";
+    return;
+
 }
 
 void DataStationManager::deployDS(QString targetId, bool testStatus){
@@ -37,18 +58,23 @@ void DataStationManager::deployDS(QString targetId, bool testStatus){
         return;
     }
 
-    QString coords = _dsLink->deployDataStation(targetId, testStatus);
+    QString coords;
+
+    coords =_dsLink->deployDataStation(targetId, testStatus);
 
     if(testStatus){
         if(coords=="245233230,544344570"){
             emit testPassed();
-            qInfo() << "coords: "+coords;
             return;
         }
         emit testFailed();
-        qInfo() << "coords: "+coords;
         return;
     }
+    qInfo() << "coords: "+coords;
+
+    QStringList list= coords.split(",");
+    double lat=list.at(0).toDouble()/10000000;
+    double lon=list.at(1).toDouble()/10000000;
 
     int index = -1;
     for (int i = 0; i < dataStations.size(); i++){
@@ -61,15 +87,19 @@ void DataStationManager::deployDS(QString targetId, bool testStatus){
     if (index == -1){
         DataStation *newStation = new DataStation();
         newStation->setId(targetId);
-//        newStation->setGPSCoords(x, y);
+        newStation->setLat(lat);
+        newStation->setLon(lon);
         dataStations.append(newStation);
         emit dataStationsChanged();
         return;
     }
 
-    emit dataStationsChanged();
 
-//    dataStations[index].setGPSCoords(x, y);
+
+    dataStations[index]->setLat(lat);
+    dataStations[index]->setLon(lon);
+
+    emit dataStationsChanged();
 }
 
 void DataStationManager::loadFromFile(QString path){
@@ -151,6 +181,7 @@ void DataStationManager::deleteStation(int index){
     dataStations.removeAt(index);
     emit dataStationsChanged();
 }
+
 
 
 

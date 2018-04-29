@@ -189,16 +189,14 @@ AnalyzePage {
                     enabled:    true
                     text:       qsTr("Initialize DS")
                     width:      _butttonWidth
-
                     onClicked: {
                         initDialog.open()
-                        QGroundControl.dataStationManager.initializeDS(answerInit.text)
                     }
                     Dialog {
                         id: initDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-
+                        onAccepted: {QGroundControl.dataStationManager.initializeDS(answerInit.text)}
                         ColumnLayout {
                             id: columnInit
                             width: parent ? parent.width : 100
@@ -299,6 +297,42 @@ AnalyzePage {
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Turn On DS")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                        turnOnDialog.open()
+                    }
+                    Dialog {
+                        id: turnOnDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {QGroundControl.dataStationManager.turnOnDS(answerTurnOn.text)}
+                        ColumnLayout {
+                            id: columnTurnOn
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Enter the ID of the Data Station to be turned on."
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                            RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                Label {
+                                    text: "ID"
+                                    Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
+                                }
+                                TextField {
+                                    id: answerTurnOn
+                                    //onEditingFinished: initDialog.click(StandardButton.Ok)
+                                }
                             }
                         }
                     }
