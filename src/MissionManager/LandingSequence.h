@@ -16,11 +16,14 @@ public:
     QGeoCoordinate getTouchdown() const { return touchdown; }
     QList<QGeoCoordinate> getWaypoints() const { return waypoints; }
     bool getActive() const { return active; }
+    QString getID() const { return id; }
+    QString getDescription() const { return description; }
 
     void setLoiter(QGeoCoordinate newLoiter) { loiter = newLoiter; }
     void setTouchdown(QGeoCoordinate newTouchdown) { touchdown = newTouchdown; }
     void setActive(bool newActive) { active = newActive; }
     void insertWaypoint(QGeoCoordinate newWaypoint) { waypoints.append(newWaypoint); }
+    void setDescription(QString newDescription) { description = newDescription ; }
 
 
 private:
@@ -28,6 +31,8 @@ private:
     QGeoCoordinate touchdown;
     QList<QGeoCoordinate> waypoints;
     bool active;
+    QString id;
+    QString description;
 };
 
 #endif // LANDINGSEQUENCE_H

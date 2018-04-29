@@ -51,13 +51,13 @@ AnalyzePage {
                 onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
 
                 TableViewColumn {
-                    title: qsTr("Id")
+                    title: qsTr("ID")
                     width: ScreenTools.defaultFontPixelWidth * 6
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
+                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
                             return o ? o.id : ""
 
                         }
@@ -65,34 +65,67 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Longitude")
+                    title: qsTr("Description")
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            var o = QGroundControl.dataStationManager.dataStations[styleData.row]
-                            return o ? o.lon : ""
+                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
+                            console.info(o.description)
+                            return o ? o.description : ""
                         }
                     }
                 }
 
                 TableViewColumn {
-                    title: qsTr("Latitude")
-                    width: ScreenTools.defaultFontPixelWidth * 18
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        text: QGroundControl.dataStationManager.dataStations[styleData.row].lat;
-                    }
-                }
-                TableViewColumn {
-                    title: qsTr("Active")
-                    width: ScreenTools.defaultFontPixelWidth * 6
+                    title: qsTr("Loiter")
+                    width: ScreenTools.defaultFontPixelWidth * 12
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
                         horizontalAlignment: Text.AlignHCenter
                         text: {
-                            return QGroundControl.dataStationManager.dataStations[styleData.row].active;
+                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
+                            return o ? o.loiter : ""
+                        }
+                    }
+                }
+
+                TableViewColumn {
+                    title: qsTr("Touchdown")
+                    width: ScreenTools.defaultFontPixelWidth * 12
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
+                            return o ? o.touchdown : ""
+                        }
+                    }
+                }
+
+                TableViewColumn {
+                    title: qsTr("Waypoints")
+                    width: ScreenTools.defaultFontPixelWidth * 18
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
+                            return o ? o.waypoints : ""
+                        }
+                    }
+                }
+
+
+                TableViewColumn {
+                    title: qsTr("Active")
+                    width: ScreenTools.defaultFontPixelWidth * 12
+                    horizontalAlignment: Text.AlignHCenter
+                    delegate : Text  {
+                        horizontalAlignment: Text.AlignHCenter
+                        text: {
+                            return QGroundControl.landingSequenceManager.landingSequences[styleData.row].active;
                         }
                     }
                 }
@@ -103,49 +136,32 @@ AnalyzePage {
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
-                    enabled:    tableView.currentRow>=0 && tableView.currentRow < QGroundControl.dataStationManager.dataStations.length
-                    text:       qsTr("Toggle")
-                    width:      _butttonWidth
-
-                    onClicked: {
-                         QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
-                    }
-                }
-                QGCButton {
                     enabled:    true
-                    text:       qsTr("Deploy DS")
+                    text:       qsTr("Description")
                     width:      _butttonWidth
 
                     onClicked: {
-                        deployDialog.open()
+                        descripDialog.open()
+                        QGroundControl.landingSequenceManager.landingSequences[tableView.currentRow].setDescription(description.text)
                     }
                     Dialog {
-                        id: deployDialog
+                        id: descripDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: QGroundControl.dataStationManager.deployDS(answerDep.text, testStatus.checked)
+
                         ColumnLayout {
-                            id: columnDep
+                            id: columnDescrip
                             width: parent ? parent.width : 100
                             Label {
-                                text: "Enter the ID of the Data Station to be deployed."
+                                text: "Enter the new description for the selected landing pattern"
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap
                             }
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
-                                Label {
-                                    text: "ID"
-                                    Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
-                                }
                                 TextField {
-                                    id: answerDep
-                                }
-                                CheckBox {
-                                    id: testStatus
-                                    text: "Is this a test?"
-                                    checked: false
+                                    id: description
                                 }
                             }
                         }
@@ -153,61 +169,24 @@ AnalyzePage {
                 }
                 QGCButton {
                     enabled:    true
-                    text:       qsTr("Initialize DS")
+                    text:       qsTr("Save File")
                     width:      _butttonWidth
 
                     onClicked: {
-                        initDialog.open()
-                        QGroundControl.dataStationManager.initializeDS(answerInit.text)
+                        saveDialog.open()
                     }
                     Dialog {
-                        id: initDialog
+                        id: saveDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-
+                        onAccepted: {QGroundControl.landingSequenceManager.saveToFile("/QGroundControl/landingsequences.json")
+                                    saveDialog.close()}
+                        onRejected: saveDialog.close()
                         ColumnLayout {
-                            id: columnInit
+                            id: columnSave
                             width: parent ? parent.width : 100
                             Label {
-                                text: "Enter the ID of the Data Station to be initialized."
-                                Layout.columnSpan: 2
-                                Layout.fillWidth: true
-                                wrapMode: Text.WordWrap
-                            }
-                            RowLayout {
-                                Layout.alignment: Qt.AlignHCenter
-                                Label {
-                                    text: "ID"
-                                    Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
-                                }
-                                TextField {
-                                    id: answerInit
-                                    //onEditingFinished: initDialog.click(StandardButton.Ok)
-                                }
-                            }
-                        }
-                    }
-                }
-                QGCButton {
-                    enabled:    true
-                    text:       qsTr("Delete DS")
-                    width:      _butttonWidth
-
-                    onClicked: {
-                        deleteDialog.open()
-                    }
-                    Dialog {
-                        id: deleteDialog
-                        visible: false
-                        standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: {QGroundControl.dataStationManager.deleteStation(tableView.currentRow)
-                                    deleteDialog.close()}
-                        onRejected: deleteDialog.close()
-                        ColumnLayout {
-                            id: columnDel
-                            width: parent ? parent.width : 100
-                            Label {
-                                text: "Are you sure you want to delete Data Station "+QGroundControl.dataStationManager.dataStations[tableView.currentRow].id+"?"
+                                text: "Are you sure you want to save to file? This will overwrite the file."
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap

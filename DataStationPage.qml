@@ -86,7 +86,7 @@ AnalyzePage {
                 onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
 
                 TableViewColumn {
-                    title: qsTr("Id")
+                    title: qsTr("ID")
                     width: ScreenTools.defaultFontPixelWidth * 6
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {

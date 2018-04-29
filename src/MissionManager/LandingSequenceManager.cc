@@ -21,6 +21,8 @@ QVariantList LandingSequenceManager::getLandingSequences() const
         map.insert("loiter", QVariant::fromValue(landingSequences.at(i).getLoiter()));
         map.insert("touchdown", QVariant::fromValue(landingSequences.at(i).getTouchdown()));
         map.insert("active", QVariant::fromValue(landingSequences.at(i).getActive()));
+        map.insert("id", QVariant::fromValue(landingSequences.at(i).getID()));
+        map.insert("description", QVariant::fromValue(landingSequences.at(i).getDescription()));
         QVariantList varWaypoints = QVariantList();
         for (int j = 0; j < landingSequences.at(i).getWaypoints().size(); j++){
             qInfo() << "get a waypoint";
