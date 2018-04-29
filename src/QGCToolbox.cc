@@ -31,6 +31,7 @@
 #include "SettingsManager.h"
 #include "QGCApplication.h"
 #include "DataStationManager.h"
+#include "LandingSequenceManager.h"
 
 #if defined(QGC_CUSTOM_BUILD)
 #include CUSTOMHEADER
@@ -58,6 +59,7 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
     , _corePlugin(NULL)
     , _settingsManager(NULL)
     , _dataStationManager(NULL)
+    , _landingSequenceManager(NULL)
 {
     // SettingsManager must be first so settings are available to any subsequent tools
     _settingsManager =          new SettingsManager(app, this);
@@ -83,6 +85,7 @@ QGCToolbox::QGCToolbox(QGCApplication* app)
     _videoManager =             new VideoManager            (app, this);
     _mavlinkLogManager =        new MAVLinkLogManager       (app, this);
     _dataStationManager =       new DataStationManager      (app, this);
+    _landingSequenceManager =   new LandingSequenceManager  (app, this);
 }
 
 void QGCToolbox::setChildToolboxes(void)
@@ -110,6 +113,7 @@ void QGCToolbox::setChildToolboxes(void)
     _videoManager->setToolbox(this);
     _mavlinkLogManager->setToolbox(this);
     _dataStationManager->setToolbox(this);
+    _landingSequenceManager->setToolbox(this);
 }
 
 void QGCToolbox::_scanAndLoadPlugins(QGCApplication* app)
