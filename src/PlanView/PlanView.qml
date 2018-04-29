@@ -922,8 +922,22 @@ QGCView {
                     enabled:            !masterController.syncInProgress
                     onClicked: {
                         console.info("Auto-Gen Mission!")
-                        // Read Data Stations
+                        // get landing coordinate... this will be takeoff location
                         var missionItemCount = _missionController.visualItems.count
+                        var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
+                        for (var j = 0; j < numOfLandingSequences; j++){
+
+                            if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
+                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequences[j].touchdown
+                                var sequenceNumberDataStation = _missionController.insertTakeOff(coordinate, missionItemCount)
+                                _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
+                                missionItemCount++
+                                break
+                            }
+                        }
+
+
+                        // Read Data Stations
                         var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
                         var dataStationCount = 0
