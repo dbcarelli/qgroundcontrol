@@ -24,13 +24,13 @@ void DataStationManager::connect(QString portname){
 //    qDebug() << "DataStationManager::connect - initializeDS output: " << initializeDS("02");
 }
 
-QString DataStationManager::initializeDS(QString newId){
+QString DataStationManager::initializeDS(QString oldId, QString newId){
     if (!_dsLink){
         qDebug() << "not connected!";
         return "Failed";
     }
 
-    if (_dsLink->setDataStationId(newId)){
+    if (_dsLink->setDataStationId(oldId, newId)){
         DataStation *newStation = new DataStation();
         newStation->setId(newId);
         dataStations.append(newStation);

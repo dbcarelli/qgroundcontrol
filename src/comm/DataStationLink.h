@@ -21,7 +21,7 @@ public:
     DataStationLink(QString portname);
     ~DataStationLink(){serialPort->close();}
 
-    int setDataStationId(QString newId);
+    int setDataStationId(QString oldId, QString newId);
     QString deployDataStation(QString targetId, bool testStatus);
 
     void sendCommand(QString targetId, QString command);

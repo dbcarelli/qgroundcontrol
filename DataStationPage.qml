@@ -196,7 +196,7 @@ AnalyzePage {
                         id: initDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: {QGroundControl.dataStationManager.initializeDS(answerInit.text)}
+                        onAccepted: {QGroundControl.dataStationManager.initializeDS(answerInitOld.text, answerInitNew.text)}
                         ColumnLayout {
                             id: columnInit
                             width: parent ? parent.width : 100
@@ -209,11 +209,15 @@ AnalyzePage {
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
                                 Label {
-                                    text: "ID"
+                                    text: "ID to be changed: New ID"
                                     Layout.alignment: Qt.AlignBaseline | Qt.AlignLeft
                                 }
                                 TextField {
-                                    id: answerInit
+                                    id: answerInitOld
+                                    //onEditingFinished: initDialog.click(StandardButton.Ok)
+                                }
+                                TextField {
+                                    id: answerInitNew
                                     //onEditingFinished: initDialog.click(StandardButton.Ok)
                                 }
                             }

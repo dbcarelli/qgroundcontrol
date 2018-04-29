@@ -34,10 +34,10 @@ QString DataStationLink::_read(size_t size, int time){
     return rcv;
 }
 
-int DataStationLink::setDataStationId(QString newId){
+int DataStationLink::setDataStationId(QString oldId, QString newId){
     flushIncomingBuffer();
     QString command = "4";
-    QString targetId = "01";
+    QString targetId = oldId;
     sendCommand(targetId, command);
     _write(prelimitor);
     _write(newId);
