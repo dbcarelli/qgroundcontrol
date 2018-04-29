@@ -4,10 +4,12 @@ LandingSequenceManager::LandingSequenceManager(QGCApplication *app, QGCToolbox *
     : QGCTool(app, toolbox)
 {
     qmlRegisterUncreatableType<LandingSequenceManager> ("QGroundControl", 1, 0, "LandingSequenceManager", "Reference only");
+    loadFromFile();
 }
 
 void LandingSequenceManager::toggleActive(int index){
     landingSequences[index].setActive(!(landingSequences.at(index).getActive()));
+    emit landingSequencesChanged();
 }
 
 QVariantList LandingSequenceManager::getLandingSequences() const
@@ -18,16 +20,15 @@ QVariantList LandingSequenceManager::getLandingSequences() const
         QMap<QString, QVariant> map = QMap<QString, QVariant>();
         map.insert("loiter", QVariant::fromValue(landingSequences.at(i).getLoiter()));
         map.insert("touchdown", QVariant::fromValue(landingSequences.at(i).getTouchdown()));
-
+        map.insert("active", QVariant::fromValue(landingSequences.at(i).getActive()));
         QVariantList varWaypoints = QVariantList();
-        for (QList<QGeoCoordinate>::iterator iter = landingSequences.at(i).getWaypoints().begin();
-             iter != landingSequences.at(i).getWaypoints().end(); iter++){
-            varWaypoints.append(QVariant::fromValue(*iter));
+        for (int j = 0; j < landingSequences.at(i).getWaypoints().size(); j++){
+            qInfo() << "get a waypoint";
+            varWaypoints.append(QVariant::fromValue(landingSequences.at(i).getWaypoints().at(j)));
         }
-
         map.insert("waypoints", varWaypoints);
+        varLandingSeqs.append(map);
     }
-
     return varLandingSeqs;
 }
 
@@ -60,29 +61,44 @@ void LandingSequenceManager::loadFromFile()
         QJsonObject jsonLandingSequence = (*i).toObject();
 
         // get the loiter coordinate and add to this LandingSequence
+        qInfo() << "Found a loiter point!";
         QJsonObject jsonLoiterCoordinate = jsonLandingSequence.value("loiter").toObject();
         double loiterLat = jsonLoiterCoordinate.value("lat").toDouble();
         double loiterLon = jsonLoiterCoordinate.value("lon").toDouble();
         double loiterAlt = jsonLoiterCoordinate.value("alt").toDouble();
         QGeoCoordinate loiterPoint = QGeoCoordinate(loiterLat, loiterLon, loiterAlt);
+        qInfo() << "Loiter Point";
+        qInfo() << "    Lat: "; qInfo() << loiterLat;
+        qInfo() << "    Lon: "; qInfo() << loiterLon;
+        qInfo() << "    Alt: "; qInfo() << loiterAlt;
         newLandingSequence->setLoiter(loiterPoint);
 
         // get the touchdown coordinate and add to this LandingSequence
+        qInfo() << "Found a touchdown point";
         QJsonObject jsonTouchdownCoordinate = jsonLandingSequence.value("touchdown").toObject();
         double touchdownLat = jsonTouchdownCoordinate.value("lat").toDouble();
         double touchdownLon = jsonTouchdownCoordinate.value("lon").toDouble();
         double touchdownAlt = jsonTouchdownCoordinate.value("alt").toDouble();
         QGeoCoordinate touchdownPoint = QGeoCoordinate(touchdownLat, touchdownLon, touchdownAlt);
+        qInfo() << "Touchdown Point";
+        qInfo() << "    Lat: "; qInfo() << touchdownLat;
+        qInfo() << "    Lon: "; qInfo() << touchdownLon;
+        qInfo() << "    Alt: "; qInfo() << touchdownAlt;
         newLandingSequence->setTouchdown(touchdownPoint);
 
         // get waypoints that define the landing corridor
         QJsonArray corridor = jsonLandingSequence.value("corridor").toArray();
-        for (QJsonArray::iterator i = corridor.begin(); i != jsonArr.end(); i++){
+        for (QJsonArray::iterator i = corridor.begin(); i != corridor.end(); i++){
+            qInfo() << "Found a corridor point";
             QJsonObject jsonWaypoint = (*i).toObject();
             double waypointLat = jsonWaypoint.value("lat").toDouble();
             double waypointLon = jsonWaypoint.value("lon").toDouble();
             double waypointAlt = jsonWaypoint.value("alt").toDouble();
             QGeoCoordinate newWaypoint = QGeoCoordinate(waypointLat, waypointLon, waypointAlt);
+            qInfo() << "Corridor Point";
+            qInfo() << "    Lat: "; qInfo() << waypointLat;
+            qInfo() << "    Lon: "; qInfo() << waypointLon;
+            qInfo() << "    Alt: "; qInfo() << waypointAlt;
             newLandingSequence->insertWaypoint(newWaypoint);
         }
         landingSequences.append(*newLandingSequence);
@@ -91,8 +107,10 @@ void LandingSequenceManager::loadFromFile()
 
     // activate one landing sequence at least
     if (landingSequences.size() > 0){
+        qInfo() << "Activated a landing sequence!";
         landingSequences[0].setActive(true);
     }
+
     emit landingSequencesChanged();
 }
 

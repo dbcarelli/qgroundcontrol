@@ -891,6 +891,7 @@ QGCView {
                     Layout.fillWidth:   true
                     enabled:            !masterController.syncInProgress
                     onClicked: {
+                        console.info("Auto-Gen Mission!")
                         var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
                         var itemCount = 0
@@ -909,21 +910,26 @@ QGCView {
                             }
                         }
                         var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
-                        var index = _missionController.visualItems.count
+                        console.info("Number of landing sequences")
+                        console.info(numOfLandingSequences)
+                        index = _missionController.visualItems.count
                         // search through the landing sequences to find the active one
-                        for (var i = 0; i < numOfLandingSequences; i++){
-                            if (QGroundControl.landingSequenceManager.landingSequences[i].active) {
+                        for (var j = 0; j < numOfLandingSequences; j++){
+                            console.info("wtf")
+                            console.info(QGroundControl.landingSequenceManager.landingSequences[j].active)
+                            if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
+                                console.info("Landing sequence!")
                                 // insert DO_LAND_START_COMMAND
 
                                 // insert corridor waypoints
-                                var numOfWaypoints = QGroundControl.landingSequenceManager.landingSequence[i].waypoints.length
-                                for (var j = 0; i < numOfWaypoints; j++){
-                                    insertSimpleMissionItem(QGroundControl.landingSequenceManager.landingSequence[i].waypoints[j], index+j+1)
+                                var numOfWaypoints = QGroundControl.landingSequenceManager.landingSequences[j].waypoints.length
+                                for (var k = 0; k < numOfWaypoints; k++){
+                                    insertSimpleMissionItem(QGroundControl.landingSequenceManager.landingSequences[j].waypoints[k], index+k+1)
                                 }
 
                                 // insert final approach
-                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequence[i].touchdown
-                                var loiterLocation = QGroundControl.landingSequenceManager.landingSequence[i].loiter
+                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequences[j].touchdown
+                                var loiterLocation = QGroundControl.landingSequenceManager.landingSequences[j].loiter
                                 insertLandingApproach(touchdownLocation, loiterLocation, index+numOfWaypoints)
                             }
                         }

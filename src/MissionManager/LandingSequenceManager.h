@@ -24,6 +24,7 @@
 class LandingSequenceManager : public QGCTool
 {
 Q_OBJECT
+Q_PROPERTY(QVariantList landingSequences READ getLandingSequences NOTIFY landingSequencesChanged)
 
 public:
 

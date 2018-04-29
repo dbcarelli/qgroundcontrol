@@ -111,8 +111,8 @@ void DataStationManager::loadFromFile(QString path){
 
         DataStation *newStation = new DataStation();
         newStation->setId(jsonObj.value("id").toString());
-        newStation->setLat(jsonObj.value("lon").toDouble());
-        newStation->setLon(jsonObj.value("lat").toDouble());
+        newStation->setLon(jsonObj.value("lon").toDouble());
+        newStation->setLat(jsonObj.value("lat").toDouble());
 
         dataStations.append(newStation);
     }
