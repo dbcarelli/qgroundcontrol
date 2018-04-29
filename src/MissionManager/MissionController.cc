@@ -629,7 +629,7 @@ void MissionController::exportToLandingSequenceManager(void) const{
                 loiter = landingApproach->loiterCoordinate();
                 touchdown = landingApproach->landingCoordinate();
             }else{
-                qDebug << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
+                qDebug() << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
             }
         }else{
             SimpleMissionItem *waypoint = (SimpleMissionItem*)visualItem;
