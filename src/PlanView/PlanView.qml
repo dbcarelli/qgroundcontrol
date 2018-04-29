@@ -897,7 +897,7 @@ QGCView {
                         id: descripDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-                        onAccepted: {}
+                        onAccepted: _missionController.exportToLandingSequenceManager(descriptionAnswer.text);
                         ColumnLayout {
                             id: columnDescrip
                             width: parent ? parent.width : 100
@@ -921,46 +921,70 @@ QGCView {
                     Layout.fillWidth:   true
                     enabled:            !masterController.syncInProgress
                     onClicked: {
-                        //console.info("Auto-Gen Mission!")
+                        console.info("Auto-Gen Mission!")
+                        // get landing coordinate... this will be takeoff location
+                        var missionItemCount = _missionController.visualItems.count
+                        var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
+                        for (var j = 0; j < numOfLandingSequences; j++){
+
+                            if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
+                                var touchdownLocation = QGroundControl.landingSequenceManager.landingSequences[j].touchdown
+                                var sequenceNumberDataStation = _missionController.insertTakeOff(coordinate, missionItemCount)
+                                _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
+                                missionItemCount++
+                                break
+                            }
+                        }
+
+
+                        // Read Data Stations
                         var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
-                        var itemCount = 0
+                        var dataStationCount = 0
                         for (var i = 0; i < numOfDataStations; i++){
                             if (QGroundControl.dataStationManager.dataStations[i].active){
-
                                 var coordinate = QGroundControl.dataStationManager.dataStations[i].coordinate
-
-                                var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, index+itemCount)
+                                var sequenceNumberDataStation = _missionController.insertDataStationItem(coordinate, missionItemCount)
                                 _missionController.setCurrentPlanViewIndex(sequenceNumberDataStation, true)
-                                itemCount++
+                                missionItemCount++
 
-                                var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, index+itemCount)
+                                var sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, missionItemCount)
                                 _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
-                                itemCount++
+                                missionItemCount++
+
+                                dataStationCount++
                             }
                         }
                         var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
-                        //console.info("Number of landing sequences")
-                        //console.info(numOfLandingSequences)
+
                         index = _missionController.visualItems.count
                         // search through the landing sequences to find the active one
                         for (var j = 0; j < numOfLandingSequences; j++){
-                            //console.info("wtf")
-                            //console.info(QGroundControl.landingSequenceManager.landingSequences[j].active)
+
                             if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
                                 console.info("Landing sequence!")
-                                // insert DO_LAND_START_COMMAND
 
                                 // insert corridor waypoints
                                 var numOfWaypoints = QGroundControl.landingSequenceManager.landingSequences[j].waypoints.length
                                 for (var k = 0; k < numOfWaypoints; k++){
-                                    insertSimpleMissionItem(QGroundControl.landingSequenceManager.landingSequences[j].waypoints[k], index+k+1)
+                                    coordinate = QGroundControl.landingSequenceManager.landingSequences[j].waypoints[k]
+                                    // insert DO_LAND_START if its the first one
+                                    if (k == 0){
+                                        _missionController.insertLandingStart(coordinate, missionItemCount)
+                                        missionItemCount++
+                                    }
+                                    sequenceNumberNavCmd = _missionController.insertSimpleMissionItem(coordinate, missionItemCount)
+                                    missionItemCount++
+                                    _missionController.setCurrentPlanViewIndex(sequenceNumberNavCmd, true)
                                 }
 
                                 // insert final approach
                                 var touchdownLocation = QGroundControl.landingSequenceManager.landingSequences[j].touchdown
                                 var loiterLocation = QGroundControl.landingSequenceManager.landingSequences[j].loiter
-                                insertLandingApproach(touchdownLocation, loiterLocation, index+numOfWaypoints)
+                                var loiterDirection = false
+                                var sequenceNumber = _missionController.insertLandingApproach(touchdownLocation, loiterLocation, loiterDirection, missionItemCount)
+                                missionItemCount++
+                                _missionController.setCurrentPlanViewIndex(sequenceNumber, true)
                             }
                         }
 

@@ -365,6 +365,7 @@ int MissionController::insertSimpleMissionItem(QGeoCoordinate coordinate, int i)
 
     return newItem->sequenceNumber();
 }
+
 int MissionController::insertDataStationItem(QGeoCoordinate coordinate, int i)
 {
     qWarning() << "MissionController::insertDataStationItem called!\n";
@@ -475,7 +476,7 @@ int MissionController::insertComplexMissionItem(QString itemName, QGeoCoordinate
     return newItem->sequenceNumber();
 }
 
-int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, int i)
+int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate, QGeoCoordinate loiterCoordinate, bool loiterDirection, int i)
 {
     FixedWingLandingComplexItem* newItem;
 
@@ -485,8 +486,67 @@ int MissionController::insertLandingApproach(QGeoCoordinate touchdownCoordinate,
     newItem->setSequenceNumber(sequenceNumber);
     newItem->setLandingCoordinate(touchdownCoordinate);
     newItem->setLoiterCoordinate(loiterCoordinate);
-
+    newItem->setProperty("loiterClockwise", loiterDirection);
     _initVisualItem(newItem);
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
+int MissionController::insertLandingStart(QGeoCoordinate coordinate, int i)
+{
+    qWarning() << "MissionController::insertLandingStart called!\n";
+
+    int sequenceNumber = _nextSequenceNumber();
+    SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setCoordinate(coordinate);
+    newItem->setCommand(MAV_CMD_DO_LAND_START);
+    _initVisualItem(newItem);
+    newItem->setDefaultsForCommand();
+    if (newItem->specifiesAltitude()) {
+        double  prevAltitude;
+        int     prevAltitudeMode;
+
+        if (_findPreviousAltitude(i, &prevAltitude, &prevAltitudeMode)) {
+            newItem->altitude()->setRawValue(prevAltitude);
+            newItem->setAltitudeMode((SimpleMissionItem::AltitudeMode)prevAltitudeMode);
+        }
+    }
+    newItem->setMissionFlightStatus(_missionFlightStatus);
+
+
+    _visualItems->insert(i, newItem);
+
+    _recalcAll();
+
+    return newItem->sequenceNumber();
+}
+
+int MissionController::insertTakeOff(QGeoCoordinate coordinate, int i){
+    qWarning() << "MissionController::insertTakeOff called!\n";
+
+    int sequenceNumber = _nextSequenceNumber();
+    SimpleMissionItem * newItem = new SimpleMissionItem(_controllerVehicle, this);
+    newItem->setSequenceNumber(sequenceNumber);
+    newItem->setCoordinate(coordinate);
+    newItem->setCommand(MAV_CMD_NAV_TAKEOFF);
+    _initVisualItem(newItem);
+    newItem->setDefaultsForCommand();
+    if (newItem->specifiesAltitude()) {
+        double  prevAltitude;
+        int     prevAltitudeMode;
+
+        if (_findPreviousAltitude(i, &prevAltitude, &prevAltitudeMode)) {
+            newItem->altitude()->setRawValue(prevAltitude);
+            newItem->setAltitudeMode((SimpleMissionItem::AltitudeMode)prevAltitudeMode);
+        }
+    }
+    newItem->setMissionFlightStatus(_missionFlightStatus);
+
 
     _visualItems->insert(i, newItem);
 
@@ -553,6 +613,46 @@ void MissionController::removeAll(void)
         setDirty(true);
         _resetMissionFlightStatus();
     }
+}
+
+void MissionController::exportToLandingSequenceManager(QString description) const{
+    // identify loiter, touchdown, and waypoints
+    QGeoCoordinate loiter;
+    QGeoCoordinate touchdown;
+    QList<QGeoCoordinate> waypoints;
+
+    for (int i=0; i < _visualItems->count(); i++) {
+        VisualMissionItem* visualItem = qobject_cast<VisualMissionItem*>(_visualItems->get(i));
+        if (!visualItem->isSimpleItem()){
+            FixedWingLandingComplexItem *landingApproach = dynamic_cast<FixedWingLandingComplexItem*>(visualItem);
+            if (landingApproach){
+                loiter = landingApproach->loiterCoordinate();
+                touchdown = landingApproach->landingCoordinate();
+                qDebug() << "MissionController::exportToLandingSequenceManager - adding item " << visualItem->sequenceNumber();
+            }else{
+                qDebug() << "MissionController::exportToLandingSequenceManager - unidentified ComplexMissionItem " << visualItem->sequenceNumber();
+            }
+        }else{
+            SimpleMissionItem *waypoint = (SimpleMissionItem*)visualItem;
+            if (waypoint->command() == MAV_CMD_NAV_WAYPOINT){
+                waypoints.append(waypoint->coordinate());
+                qDebug() << "MissionController::exportToLandingSequenceManager - adding waypoint " << waypoint->sequenceNumber();
+            }else{
+                qDebug() << "MissionController::exportToLandingSequenceManager - unidentified SimpleMissionItem " << waypoint->sequenceNumber();
+            }
+        }
+    }
+
+    LandingSequence landingSequence = LandingSequence();
+    landingSequence.setLoiter(loiter);
+    landingSequence.setTouchdown(touchdown);
+    landingSequence.setDescription(description);
+    landingSequence.setActive(false);
+
+    for (int i = 0; i < waypoints.size(); i++)
+        landingSequence.insertWaypoint(waypoints.at(i));
+
+    qgcApp()->toolbox()->landingSequenceManager()->insertLandingSequence(landingSequence);
 }
 
 bool MissionController::_loadJsonMissionFileV1(const QJsonObject& json, QmlObjectListModel* visualItems, QString& errorString)

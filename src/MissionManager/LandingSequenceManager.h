@@ -29,7 +29,7 @@ Q_PROPERTY(QVariantList landingSequences READ getLandingSequences NOTIFY landing
 public:
 
     LandingSequenceManager(QGCApplication *app, QGCToolbox *toolbox);
-    ~LandingSequenceManager(){};
+    ~LandingSequenceManager(){}
 
     QVariantList getLandingSequences() const;
 
@@ -39,7 +39,9 @@ public:
 
     void loadFromFile();
 
-    void saveToFile();
+    Q_INVOKABLE void saveToFile();
+
+    void insertLandingSequence(LandingSequence& landingSequence);
 
 private:
     QList<LandingSequence> landingSequences;
