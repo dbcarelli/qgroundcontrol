@@ -250,6 +250,60 @@ AnalyzePage {
                         }
                     }
                 }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Load File")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                        loadDialog.open()
+                    }
+                    Dialog {
+                        id: loadDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {QGroundControl.dataStationManager.loadFromFile("/QGroundControl/datastations.json")
+                                    loadDialog.close()}
+                        onRejected: loadDialog.close()
+                        ColumnLayout {
+                            id: columnLoad
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Are you sure you want to load from file? This will delete any changes."
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
+                QGCButton {
+                    enabled:    true
+                    text:       qsTr("Save File")
+                    width:      _butttonWidth
+
+                    onClicked: {
+                        saveDialog.open()
+                    }
+                    Dialog {
+                        id: saveDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {QGroundControl.dataStationManager.saveToFile("/QGroundControl/datastations.json")
+                                    saveDialog.close()}
+                        onRejected: saveDialog.close()
+                        ColumnLayout {
+                            id: columnSave
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Are you sure you want to save to file? This will overwrite the file."
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                        }
+                    }
+                }
             } // Column - Buttons
         } // RowLayout
     } // Component

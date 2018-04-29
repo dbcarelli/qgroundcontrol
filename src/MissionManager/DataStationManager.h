@@ -54,8 +54,8 @@ public:
 
     Q_INVOKABLE void toggleActive(int index);
 
-    void loadFromFile(QString path);
-    void saveToFile(QString path);
+    Q_INVOKABLE void loadFromFile(QString path);
+    Q_INVOKABLE void saveToFile(QString path);
     // remove datastation from list?
     Q_INVOKABLE void deleteStation(int index);
 
