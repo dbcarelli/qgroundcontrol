@@ -887,11 +887,41 @@ QGCView {
                     }
                 }
                 QGCButton {
+                    text:               qsTr("Save Landing Sequence")
+                    Layout.fillWidth:   true
+                    enabled:            !masterController.syncInProgress
+                    onClicked: {
+                        descripDialog.open()
+                    }
+                    Dialog {
+                        id: descripDialog
+                        visible: false
+                        standardButtons: StandardButton.Ok | StandardButton.Cancel
+                        onAccepted: {}
+                        ColumnLayout {
+                            id: columnDescrip
+                            width: parent ? parent.width : 100
+                            Label {
+                                text: "Enter the description for the new landing pattern."
+                                Layout.columnSpan: 2
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                            }
+                            RowLayout {
+                                Layout.alignment: Qt.AlignHCenter
+                                TextField {
+                                    id: descriptionAnswer
+                                }
+                            }
+                        }
+                    }
+                }
+                QGCButton {
                     text:               qsTr("Auto-Gen Mission")
                     Layout.fillWidth:   true
                     enabled:            !masterController.syncInProgress
                     onClicked: {
-                        console.info("Auto-Gen Mission!")
+                        //console.info("Auto-Gen Mission!")
                         var numOfDataStations = QGroundControl.dataStationManager.dataStations.length
                         var index = _missionController.visualItems.count
                         var itemCount = 0
@@ -910,13 +940,13 @@ QGCView {
                             }
                         }
                         var numOfLandingSequences = QGroundControl.landingSequenceManager.landingSequences.length
-                        console.info("Number of landing sequences")
-                        console.info(numOfLandingSequences)
+                        //console.info("Number of landing sequences")
+                        //console.info(numOfLandingSequences)
                         index = _missionController.visualItems.count
                         // search through the landing sequences to find the active one
                         for (var j = 0; j < numOfLandingSequences; j++){
-                            console.info("wtf")
-                            console.info(QGroundControl.landingSequenceManager.landingSequences[j].active)
+                            //console.info("wtf")
+                            //console.info(QGroundControl.landingSequenceManager.landingSequences[j].active)
                             if (QGroundControl.landingSequenceManager.landingSequences[j].active) {
                                 console.info("Landing sequence!")
                                 // insert DO_LAND_START_COMMAND

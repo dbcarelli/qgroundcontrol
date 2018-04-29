@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE void toggleActive(int index);
 
+    Q_INVOKABLE void setDescription(int index, QString newDescription){ landingSequences[index].setDescription(newDescription); emit landingSequencesChanged(); }
+
     void loadFromFile();
 
     void saveToFile();

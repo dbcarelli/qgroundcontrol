@@ -26,6 +26,7 @@ public:
     void setDescription(QString newDescription) { description = newDescription ; }
 
 
+
 private:
     QGeoCoordinate loiter;
     QGeoCoordinate touchdown;
@@ -33,6 +34,11 @@ private:
     bool active;
     QString id;
     QString description;
+
+
+signals:
+    void activeChanged();
+    void descriptionChanged();
 };
 
 #endif // LANDINGSEQUENCE_H

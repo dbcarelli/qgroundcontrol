@@ -9,6 +9,9 @@ LandingSequenceManager::LandingSequenceManager(QGCApplication *app, QGCToolbox *
 
 void LandingSequenceManager::toggleActive(int index){
     landingSequences[index].setActive(!(landingSequences.at(index).getActive()));
+    for(int i= 0; i< landingSequences.size(); i++){
+        landingSequences[i].setActive(false);
+    }
     emit landingSequencesChanged();
 }
 

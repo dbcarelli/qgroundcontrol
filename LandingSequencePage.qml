@@ -48,7 +48,7 @@ AnalyzePage {
                 model:              QGroundControl.landingSequenceManager.landingSequences
                 selectionMode:      SelectionMode.SingleSelection
                 Layout.fillWidth:   true
-                onActivated: QGroundControl.dataStationManager.toggleActive(tableView.currentRow)
+                onActivated: QGroundControl.landingSequenceManager.toggleActive(tableView.currentRow)
 
                 TableViewColumn {
                     title: qsTr("ID")
@@ -79,46 +79,6 @@ AnalyzePage {
                 }
 
                 TableViewColumn {
-                    title: qsTr("Loiter")
-                    width: ScreenTools.defaultFontPixelWidth * 12
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
-                        text: {
-                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
-                            return o ? o.loiter : ""
-                        }
-                    }
-                }
-
-                TableViewColumn {
-                    title: qsTr("Touchdown")
-                    width: ScreenTools.defaultFontPixelWidth * 12
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
-                        text: {
-                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
-                            return o ? o.touchdown : ""
-                        }
-                    }
-                }
-
-                TableViewColumn {
-                    title: qsTr("Waypoints")
-                    width: ScreenTools.defaultFontPixelWidth * 18
-                    horizontalAlignment: Text.AlignHCenter
-                    delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
-                        text: {
-                            var o = QGroundControl.landingSequenceManager.landingSequences[styleData.row]
-                            return o ? o.waypoints : ""
-                        }
-                    }
-                }
-
-
-                TableViewColumn {
                     title: qsTr("Active")
                     width: ScreenTools.defaultFontPixelWidth * 12
                     horizontalAlignment: Text.AlignHCenter
@@ -130,30 +90,29 @@ AnalyzePage {
                     }
                 }
             }
-
             Column {
                 spacing:            _margin
                 Layout.alignment:   Qt.AlignTop | Qt.AlignLeft
 
                 QGCButton {
                     enabled:    true
-                    text:       qsTr("Description")
+                    text:       qsTr("Edit Description")
                     width:      _butttonWidth
 
                     onClicked: {
                         descripDialog.open()
-                        QGroundControl.landingSequenceManager.landingSequences[tableView.currentRow].setDescription(description.text)
+
                     }
                     Dialog {
                         id: descripDialog
                         visible: false
                         standardButtons: StandardButton.Ok | StandardButton.Cancel
-
+                        onAccepted: {QGroundControl.landingSequenceManager.setDescription(tableView.currentRow,descriptionAnswer.text)}
                         ColumnLayout {
                             id: columnDescrip
                             width: parent ? parent.width : 100
                             Label {
-                                text: "Enter the new description for the selected landing pattern"
+                                text: "Enter the new description for the selected landing pattern."
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.WordWrap
@@ -161,7 +120,7 @@ AnalyzePage {
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
                                 TextField {
-                                    id: description
+                                    id: descriptionAnswer
                                 }
                             }
                         }
