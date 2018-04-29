@@ -111,7 +111,6 @@ AnalyzePage {
                     width: ScreenTools.defaultFontPixelWidth * 18
                     horizontalAlignment: Text.AlignHCenter
                     delegate : Text  {
-                        horizontalAlignment: Text.AlignHCenter
                         text: {
                             var o = QGroundControl.dataStationManager.dataStations[styleData.row]
                             return o ? o.lon : ""
